@@ -3,16 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next dev",
+    "lint": "next lint",
+    "test": "jest",
+    "deploy:prod": "vercel pull --yes --environment=production --token=$VERCEL_TOKEN && vercel build --prod --token=$VERCEL_TOKEN && vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN",
+    "postinstall": "cp -n .env.template .env.local"
   },
   "dependencies": {
     "@next/font": "13.1.5",
+    "@seratch_/bolt-http-runner": "^1.0.3",
+    "@slack/bolt": "^3.12.2",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "airtable": "^0.11.6",
+    "axios": "^1.2.4",
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.5",
     "next": "13.1.5",

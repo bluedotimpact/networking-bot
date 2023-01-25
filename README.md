@@ -1,38 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# networking-bot
 
-## Getting Started
+A Slack app that pairs up paticipants for 1:1 conversations.
 
-First, run the development server:
+## Progress notes
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Complete:
+- Set up project with API
+- Build db helper to safely use AirTable as a database
+- Set up Slack OAuth
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To do next: Currently, matcher.ts is some placeholder code accessing the Slack API to get users. We should actually implement the matching and MPIM logic!
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Then: probably fix how this will pull in participants in a multi-tenant way.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Developer setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone this repository
+2. Install Node
+3. Install dependencies with `npm install`
+4. Get access to the [[Example] Slack networking bot](https://airtable.com/appnNmNoNMB6crg6I/tblS8xNuLljBS5Lml/viwx3r0P8Be3s78rh?blocks=hide) base and create an [AirTable personal access token](https://support.airtable.com/docs/creating-and-using-api-keys-and-access-tokens)
+5. Set the environment variables in [`.env.local`](./.env.local)
+6. Run the server with `npm start`
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This app is deployed using Vercel and uses an Airtable base itself as the database. API keys are stored safely in Vercel environment variables.
