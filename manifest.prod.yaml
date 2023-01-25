@@ -1,0 +1,22 @@
+display_information:
+  name: networking bot
+features:
+  bot_user:
+    display_name: networking bot
+    always_online: false
+oauth_config:
+  redirect_urls:
+    - https://networking-bot.vercel.app/api/slack/oauth_redirect
+  scopes:
+    bot:
+      - chat:write
+      - mpim:write
+      - users:read
+      - users:read.email
+settings:
+  interactivity:
+    is_enabled: true
+    request_url: https://networking-bot.vercel.app/api/slack/events
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false

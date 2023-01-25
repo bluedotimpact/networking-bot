@@ -1,0 +1,20 @@
+name: trigger
+
+on:
+  # schedule:
+    # 5pm UTC every Monday
+    # - cron: '0 17 * * 1'
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Hit scheduler API
+        run: |
+          curl \
+          --fail-with-body \
+          --request POST \
+          --url 'https://networking-bot.vercel.app/api/scheduler/run' \
+          --header 'x-api-key: ${{ secrets.SCHEDULER_API_KEY }}'
