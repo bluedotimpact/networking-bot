@@ -14,6 +14,8 @@ const envVars = [
   "SLACK_SIGNING_SECRET",
   "SLACK_STATE_SECRET",
   "SLACK_REDIRECT_URI",
+
+  "SCHEDULER_API_KEY",
 ] as const;
 
 export type Env = Record<(typeof envVars)[number], string>;

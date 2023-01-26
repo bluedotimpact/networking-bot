@@ -46,11 +46,6 @@ const getAirtableTable = async <T extends Item>(table: Table<T>): Promise<Airtab
     throw new Error(`Failed to find table ${table.tableId} in base ${table.baseId}`)
   }
   Object.entries(table.schema).forEach(([k, v]) => {
-    // We use the record id for this so we know it's always a string
-    if (k === "id") {
-      return;
-    }
-
     const airtableType = fields.find(f => f.name === k)?.type;
     if (!airtableType) {
       throw new Error(`Failed to find field '${k}' in table ${table.tableId} in base ${table.baseId}`)
@@ -84,7 +79,9 @@ export function assertMatchesSchema<T extends Item>(table: Table<T>, data: unkno
 const backfillFor: { [K in BaseTypeStrings]: FromString<K> } = {
   "boolean": false,
   "string": "",
-  number: 0,
+  "number": 0,
+  "string[]": [],
+  "number[]": [],
 }
 
 const mapRecordToItem = <T extends Item>(table: Table<T>, record: AirtableRecord<T & FieldSet>): T => {

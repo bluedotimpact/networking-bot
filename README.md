@@ -8,10 +8,9 @@ Complete:
 - Set up project with API
 - Build db helper to safely use AirTable as a database
 - Set up Slack OAuth
+- Set up matcher basics
 
-To do next: Currently, matcher.ts is some placeholder code accessing the Slack API to get users. We should actually implement the matching and MPIM logic!
-
-Then: probably fix how this will pull in participants in a multi-tenant way.
+Next: fix how this will pull in participants in a multi-tenant way. Got some way to doing this, but need to edit the db logic to do use the defined table mappings, and then actually make the mappings use the installation table. Also need some way to set up the installation table - maybe okay to be manual for now.
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 
