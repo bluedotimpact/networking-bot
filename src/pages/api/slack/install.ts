@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { appRunner } from './_app';
 
-export default async function handler(
+export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {

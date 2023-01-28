@@ -9,8 +9,7 @@ Complete:
 - Build db helper to safely use AirTable as a database
 - Set up Slack OAuth
 - Set up matcher basics
-
-Next: fix how this will pull in participants in a multi-tenant way. Got some way to doing this, but need to edit the db logic to do use the defined table mappings, and then actually make the mappings use the installation table. Also need some way to set up the installation table - maybe okay to be manual for now.
+- Set up multi-tenant participant fetching
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 

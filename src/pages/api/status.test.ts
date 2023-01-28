@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import type { Request, Response } from 'express';
 import { createMocks } from "node-mocks-http";
-import handler from "./status";
+import handle from "./status";
 
 describe('/api/status', () => {
   test('returns an online status', async () => {
@@ -10,7 +10,7 @@ describe('/api/status', () => {
       NextApiResponse & Response
     >({ method: 'GET' });
 
-    await handler(req, res);
+    await handle(req, res);
 
     expect(res._getStatusCode()).toBe(200);
     expect(JSON.parse(res._getData())).toEqual({

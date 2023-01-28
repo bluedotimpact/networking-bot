@@ -17,14 +17,23 @@ export const appRunner = new AppRunner({
         ? installation.enterprise!.id
         : installation.team!.id;
 
-      await insert(installationsTable, { teamId, json: JSON.stringify(installation) });
+      await insert(installationsTable, {
+        slackTeamId: teamId,
+        slackInstallationJson: JSON.stringify(installation),
+        participantsBaseId: "",
+        participantsTableId: "",
+        participantsEnabledFieldName: "enabled",
+        participantsSlackEmailFieldName: "slackEmail",
+        participantsDimensionFieldNamesJson: JSON.stringify([]),
+      });
     },
     fetchInstallation: async (installQuery) => {
       const teamId = installQuery.isEnterpriseInstall
         ? installQuery.enterpriseId!
         : installQuery.teamId!;
 
-      const installations = await scan(installationsTable, `teamId = ${teamId}`)
+      // const installations = await scan(installationsTable, `{slackTeamId} = '${teamId}'`)
+      const installations = (await scan(installationsTable)).filter(i => i.slackTeamId === teamId)
       if (installations.length === 0) {
         throw new Error(`Installation not found for team ${teamId}`)
       }
@@ -33,7 +42,7 @@ export const appRunner = new AppRunner({
         throw new Error(`Multiple installations found for team ${teamId}`)
       }
 
-      return JSON.parse(installations[0].json);
+      return JSON.parse(installations[0].slackInstallationJson);
     },
     deleteInstallation: async (installQuery) => {
       throw new Error('Not implemented');
@@ -41,6 +50,6 @@ export const appRunner = new AppRunner({
   },
 });
 
-const app = new App(appRunner.appOptions());
+export const app = new App(appRunner.appOptions());
 
 appRunner.setup(app);

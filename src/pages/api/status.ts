@@ -4,7 +4,7 @@ export type StatusResponse = {
   status: string
 }
 
-export default async function handler(
+export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse<StatusResponse>
 ) {

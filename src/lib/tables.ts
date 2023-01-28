@@ -1,20 +1,71 @@
 import env from "@/lib/env"
 
-export type ToString<T> = 
+export type BaseTypeStrings = NonNullToString<any> | ToString<any>
+
+type NonNullToString<T> =
   T extends string ? "string" :
-  T extends boolean ? "boolean" :
   T extends number ? "number" :
+  T extends boolean ? "boolean" :
   T extends number[] ? "number[]" :
   T extends string[] ? "string[]" :
+  T extends boolean[] ? "boolean[]" :
   never;
 
-export type FromString<T> = 
+export type ToString<T> =
+  null extends T ? `${NonNullToString<T>} | null` : NonNullToString<T>;
+
+export type FromString<T> =
   T extends "string" ? string :
-  T extends "boolean" ? boolean :
+  T extends "string | null" ? string | null :
   T extends "number" ? number :
+  T extends "number | null" ? number | null :
+  T extends "boolean" ? boolean :
+  T extends "boolean | null" ? boolean | null :
   T extends "number[]" ? number[] :
+  T extends "number[] | null" ? number[] | null :
   T extends "string[]" ? string[] :
+  T extends "string[] | null" ? string[] | null :
+  T extends "boolean[]" ? boolean[] :
+  T extends "boolean[] | null" ? boolean[] | null :
   never;
+
+export interface TypeDef {
+  single: "string" | "number" | "boolean",
+  array: boolean,
+  nullable: boolean,
+}
+
+export const parseType = (t: BaseTypeStrings): TypeDef => {
+  if (t.endsWith('[] | null')) {
+    return {
+      single: t.slice(0, -('[] | null'.length)) as TypeDef["single"],
+      array: true,
+      nullable: true,
+    }
+  }
+
+  if (t.endsWith('[]')) {
+    return {
+      single: t.slice(0, -('[]'.length)) as TypeDef["single"],
+      array: true,
+      nullable: false,
+    }
+  }
+
+  if (t.endsWith(' | null')) {
+    return {
+      single: t.slice(0, -(' | null'.length)) as TypeDef["single"],
+      array: false,
+      nullable: true,
+    }
+  }
+
+  return  {
+    single: t as TypeDef["single"],
+    array: false,
+    nullable: false,
+  }
+}
 
 // Value for possible field mapping
 // For arrays, this may be:
@@ -22,8 +73,6 @@ export type FromString<T> =
 // - one field name (holding an array of values of the correct type)
 // Otherwise this must be a single field name
 export type MappingValue<T> = T extends any[] ? string | string[] : string;
-
-export type BaseTypeStrings = ToString<any>;
 
 export interface Item {
   id: string
@@ -43,25 +92,14 @@ export interface Participant extends Item {
   'dimensions': number[],
 }
 
-export const participantsTable: Table<Participant> = {
-  name: 'participant',
-  baseId: env.AIRTABLE_PARTICIPANTS_BASE_ID,
-  tableId: env.AIRTABLE_PARTICIPANTS_TABLE_ID,
-  schema: {
-    'slackEmail': 'string',
-    'enabled': 'boolean',
-    'dimensions': 'number[]',
-  },
-  mappings: {
-    'slackEmail': 'Slack email', 
-    'enabled': '[netbot] Enabled', 
-    'dimensions': ['ML Skill', 'Career level'], 
-  }
-}
-
 export interface Installation extends Item {
-  'teamId': string,
-  'json': string,
+  'slackTeamId': string,
+  'slackInstallationJson': string,
+  'participantsBaseId': string,
+  'participantsTableId': string,
+  'participantsSlackEmailFieldName': string,
+  'participantsEnabledFieldName': string,
+  'participantsDimensionFieldNamesJson': string,
 }
 
 export const installationsTable: Table<Installation> = {
@@ -69,18 +107,22 @@ export const installationsTable: Table<Installation> = {
   baseId: env.AIRTABLE_INSTALLATIONS_BASE_ID,
   tableId: env.AIRTABLE_INSTALLATIONS_TABLE_ID,
   schema: {
-    teamId: 'string',
-    json: 'string',
+    'slackTeamId': 'string',
+    'slackInstallationJson': 'string',
+    'participantsBaseId': 'string',
+    'participantsTableId': 'string',
+    'participantsSlackEmailFieldName': 'string',
+    'participantsEnabledFieldName': 'string',
+    'participantsDimensionFieldNamesJson': 'string',
   },
 }
 
 export interface Meeting extends Item {
-  'mpim': string,
-  'participantIds': string,
-  // TODO: use dates?
+  'slackMpim': string,
+  'participantIdsJson': string,
   'createdAt': number,
-  'followedUpAt': number,
-  'completed': boolean,
+  'lastModifiedAt': number,
+  'state': "PENDING" | "CONFIRMED" | "COMPLETED" | "DECLINED",
 }
 
 export const meetingsTable: Table<Meeting> = {
@@ -88,11 +130,11 @@ export const meetingsTable: Table<Meeting> = {
   baseId: env.AIRTABLE_MEETINGS_BASE_ID,
   tableId: env.AIRTABLE_MEETINGS_TABLE_ID,
   schema: {
-    mpim: 'string',
-    participantIds: 'string',
-    createdAt: 'number',
-    followedUpAt: 'number',
-    completed: 'boolean',
+    'slackMpim': 'string',
+    'participantIdsJson': 'string',
+    'createdAt': 'number',
+    'lastModifiedAt': 'number',
+    'state': 'string',
   },
 }
 
@@ -108,9 +150,11 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
   baseId: env.AIRTABLE_MEETING_FEEDBACKS_BASE_ID,
   tableId: env.AIRTABLE_MEETING_FEEDBACKS_TABLE_ID,
   schema: {
-    participantId: 'string',
-    meetingId: 'string',
-    value: 'number',
-    createdAt: 'number',
+    'participantId': 'string',
+    'meetingId': 'string',
+    'value': 'number',
+    'createdAt': 'number',
   },
 }
+
+// TODO: scheduler run result table?
