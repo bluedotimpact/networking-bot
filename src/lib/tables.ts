@@ -86,6 +86,22 @@ export interface Table<T extends Item> {
   mappings?: { [k in keyof Omit<T, 'id'>]: MappingValue<T[k]> }
 }
 
+export const participantsTableFor = (installation: Installation): Table<Participant> => ({
+  name: 'participant',
+  baseId: installation.participantsBaseId,
+  tableId: installation.participantsTableId,
+  schema: {
+    'slackEmail': 'string',
+    'enabled': 'boolean',
+    'dimensions': 'number[]',
+  },
+  mappings: {
+    'slackEmail': installation.participantsSlackEmailFieldName, 
+    'enabled': installation.participantsEnabledFieldName, 
+    'dimensions': JSON.parse(installation.participantsDimensionFieldNamesJson),
+  },
+})
+
 export interface Participant extends Item {
   'slackEmail': string,
   'enabled': boolean,
