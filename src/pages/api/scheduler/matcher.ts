@@ -86,6 +86,7 @@ const handleInstallation = async (installation: Installation) => {
     }
 
     const meeting = await insert(meetingsTable, {
+      installationId: installation.id,
       createdAt: Math.floor(new Date().getTime() / 1000),
       lastModifiedAt: Math.floor(new Date().getTime() / 1000),
       participantIdsJson: JSON.stringify(match.map(p => p.id)),

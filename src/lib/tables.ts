@@ -119,6 +119,7 @@ export const installationsTable: Table<Installation> = {
 
 export interface Meeting extends Item {
   'slackMpim': string,
+  'installationId': string,
   'participantIdsJson': string,
   'createdAt': number,
   'lastModifiedAt': number,
@@ -131,6 +132,7 @@ export const meetingsTable: Table<Meeting> = {
   tableId: env.AIRTABLE_MEETINGS_TABLE_ID,
   schema: {
     'slackMpim': 'string',
+    'installationId': 'string',
     'participantIdsJson': 'string',
     'createdAt': 'number',
     'lastModifiedAt': 'number',

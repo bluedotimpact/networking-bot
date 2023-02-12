@@ -83,7 +83,7 @@ const typeMatches = (actualType: string, expectedType: TypeDef, isArray: boolean
 export function assertMatchesSchema<T extends Item>(
   table: Table<T>,
   data: unknown,
-  direction = "in"
+  { direction = "in", partial = false } = {}
 ): asserts data is T {
   if (typeof data !== "object" || data === null) {
     throw new Error(`Item ${direction} ${table.name} is not an object`);
@@ -96,6 +96,7 @@ export function assertMatchesSchema<T extends Item>(
 
     const isCorrectType =
       (expectedType.nullable && value === null)
+      || (partial && value === undefined)
       || (!expectedType.array && typeof value === expectedType.single)
       || (
         expectedType.array
@@ -169,11 +170,19 @@ export const scan = async <T extends Item>(table: Table<T>, filterByFormula?: st
 }
 
 export const insert = async <T extends Item>(table: Table<T>, data: Omit<T, 'id'>): Promise<T> => {
-  assertMatchesSchema(table, { ...data, id: 'placeholder' }, 'for')
+  assertMatchesSchema(table, { ...data, id: 'placeholder' }, { direction: 'for' })
   const record = await getAirtableTable(table).then(t => t.create(data as T & FieldSet))
   return mapRecordToItem(table, record)
 }
 
 export const update = async <T extends Item>(table: Table<T>, data: Partial<T> & { id: T["id"] }): Promise<T> => {
-  throw new Error('Not implemented')
+  assertMatchesSchema(table, { ...data }, { direction: 'for', partial: true })
+  const { id, ...withoutId } = data;
+  const record = await getAirtableTable(table).then(t => t.update(data.id, withoutId as Partial<T> & FieldSet))
+  return mapRecordToItem(table, record)
+}
+
+export const remove = async <T extends Item>(table: Table<T>, id: string): Promise<T> => {
+  const record = await getAirtableTable(table).then(t => t.destroy(id))
+  return mapRecordToItem(table, record)
 }

@@ -1,7 +1,7 @@
 import { App } from "@slack/bolt";
 import { AppRunner } from "@seratch_/bolt-http-runner";
 import env from "@/lib/env";
-import { insert, scan } from "@/lib/db";
+import { insert, remove, scan } from "@/lib/db";
 import { installationsTable } from "@/lib/tables";
 
 export const appRunner = new AppRunner({
@@ -45,7 +45,10 @@ export const appRunner = new AppRunner({
       return JSON.parse(installations[0].slackInstallationJson);
     },
     deleteInstallation: async (installQuery) => {
-      throw new Error('Not implemented');
+      const teamId = installQuery.isEnterpriseInstall
+        ? installQuery.enterpriseId!
+        : installQuery.teamId!;
+      await remove(installationsTable, teamId)
     },
   },
 });
