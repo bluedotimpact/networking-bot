@@ -30,11 +30,14 @@ Complete:
 - Set up matcher basics
 - Set up multi-tenant participant fetching
 - Database update method
-
-Todo:
 - State managment, i.e. confirmed/completed
 - Handle receiving feedback
-- Make matcher logic 'smart'
+
+Todo:
+- participants: restrict to a view
+- nice to have: smarter matcher logic
+- nice to have: follow-ups
+- nice to have: time availabilities
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 
