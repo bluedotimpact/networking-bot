@@ -22,7 +22,7 @@ export const appRunner = new AppRunner({
         slackInstallationJson: JSON.stringify(installation),
         participantsBaseId: "",
         participantsTableId: "",
-        participantsEnabledFieldName: "enabled",
+        participantsViewId: "",
         participantsSlackEmailFieldName: "slackEmail",
         participantsDimensionFieldNamesJson: JSON.stringify([]),
       });

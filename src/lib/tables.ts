@@ -92,19 +92,16 @@ export const participantsTableFor = (installation: Installation): Table<Particip
   tableId: installation.participantsTableId,
   schema: {
     'slackEmail': 'string',
-    'enabled': 'boolean',
     'dimensions': 'number[]',
   },
   mappings: {
     'slackEmail': installation.participantsSlackEmailFieldName, 
-    'enabled': installation.participantsEnabledFieldName, 
     'dimensions': JSON.parse(installation.participantsDimensionFieldNamesJson),
   },
 })
 
 export interface Participant extends Item {
   'slackEmail': string,
-  'enabled': boolean,
   'dimensions': number[],
 }
 
@@ -113,8 +110,8 @@ export interface Installation extends Item {
   'slackInstallationJson': string,
   'participantsBaseId': string,
   'participantsTableId': string,
+  'participantsViewId': string | null,
   'participantsSlackEmailFieldName': string,
-  'participantsEnabledFieldName': string,
   'participantsDimensionFieldNamesJson': string,
 }
 
@@ -127,8 +124,8 @@ export const installationsTable: Table<Installation> = {
     'slackInstallationJson': 'string',
     'participantsBaseId': 'string',
     'participantsTableId': 'string',
+    'participantsViewId': 'string | null',
     'participantsSlackEmailFieldName': 'string',
-    'participantsEnabledFieldName': 'string',
     'participantsDimensionFieldNamesJson': 'string',
   },
 }

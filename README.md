@@ -7,10 +7,10 @@ A Slack app that pairs up paticipants for 1:1 conversations.
 Each week, a cron job set up in GitHub Actions hits an endpoint:
 
 ```
-POST /api/scheduler/matcher
+POST /api/scheduler/run
 ```
 
-This runs the Vercel Serverless Function defined by [matcher.ts](./src/pages/api/scheduler/matcher.ts).
+This runs the Vercel Serverless Function defined by [run.ts](./src/pages/api/scheduler/run.ts).
 
 It accesses a database, which stores:
 - installations (which contain Slack installation details, and references to AirTable bases with participants)
@@ -32,11 +32,12 @@ Complete:
 - Database update method
 - State managment, i.e. confirmed/completed
 - Handle receiving feedback
+- restrict participants to a view
+- follow-ups
 
 Todo:
-- participants: restrict to a view
+- deployment
 - nice to have: smarter matcher logic
-- nice to have: follow-ups
 - nice to have: time availabilities
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
@@ -56,13 +57,13 @@ Data is stored in the AirTable base here: https://airtable.com/appnNmNoNMB6crg6I
 
 You can create a new installation here: http://localhost:3000/api/slack/install
 
-And trigger the matcher by hitting: http://localhost:3000/api/scheduler/matcher
+And trigger the matcher by hitting: http://localhost:3000/api/scheduler/run
 
 To set up event callbacks to hit the right place, you can use ngrok:
 
 1. [Install ngrok](https://ngrok.com/docs/getting-started#step-2-install-the-ngrok-agent)
 2. Run `ngrok http 3000`
-3. In the Slack console, for '(dev) netbot' under 'Interactivity & Shortcuts' paste in `https://your-ngrok-subdomain.ngrok.io/api/slack/events`, then click 'Save Changes'
+3. In [the Slack console for '(dev) netbot'](https://api.slack.com/apps/A04LWUG8A3T/interactive-messages) under 'Interactivity & Shortcuts' paste in `https://your-ngrok-subdomain.ngrok.io/api/slack/events`, then click 'Save Changes'
 
 ## Deployment
 

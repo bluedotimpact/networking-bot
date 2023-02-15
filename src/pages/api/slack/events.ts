@@ -1,6 +1,7 @@
 import { get, insert, update } from "@/lib/db";
 import { acknowledgeSlackButton, ACTION_IDS, findSlackId, makeMessage } from "@/lib/slack";
 import { installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor } from "@/lib/tables";
+import { now } from "@/lib/timestamp";
 import { BlockAction, ButtonAction } from "@slack/bolt";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { app, appRunner } from './_app';
@@ -28,7 +29,7 @@ app.action<BlockAction<ButtonAction>>(
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
-      lastModifiedAt: Math.floor(new Date().getTime() / 1000),
+      lastModifiedAt: now(),
       state: 'CONFIRMED',
     })
 
@@ -46,7 +47,7 @@ app.action<BlockAction<ButtonAction>>(
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
-      lastModifiedAt: Math.floor(new Date().getTime() / 1000),
+      lastModifiedAt: now(),
       state: 'COMPLETED',
     })
 
@@ -71,7 +72,7 @@ app.action<BlockAction<ButtonAction>>(
     }));
 
     await Promise.all(participants.map(participant => {
-      const text = `Your feedback is valuable for us to help match you up with great people, and improve the experience for future programmes. It is *not shared* with other participants.\n\nHow *useful* was matching you up with ${participants.filter(p => p !== participant).map(p => `<@${p.slackId}>`).join(' and ')}?`;
+      const text = `Your feedback is valuable for us to help match you up with great people, and improve the experience for future programmes. It is *not shared* with other participants.\n\nHow useful was matching you up with ${participants.filter(p => p !== participant).map(p => `<@${p.slackId}>`).join(' and ')}?`;
       
       return args.client.chat.postMessage({
         channel: participant.slackId,
@@ -94,7 +95,7 @@ app.action<BlockAction<ButtonAction>>(
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
-      lastModifiedAt: Math.floor(new Date().getTime() / 1000),
+      lastModifiedAt: now(),
       state: 'DECLINED',
     })
 
@@ -114,7 +115,7 @@ app.action<BlockAction<ButtonAction>>(
     await insert(meetingFeedbacksTable, {
       meetingId,
       participantId,
-      createdAt: Math.floor(new Date().getTime() / 1000),
+      createdAt: now(),
       value: rating,
     })
 

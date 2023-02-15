@@ -1,4 +1,5 @@
 import Airtable, { FieldSet, Table as AirtableTable, Record as AirtableRecord } from "airtable";
+import { QueryParams } from "airtable/lib/query_params";
 import axios from "axios";
 import env from "./env";
 import { BaseTypeStrings, FromString, Item, Table, parseType, TypeDef } from "./tables";
@@ -162,10 +163,10 @@ export const get = async <T extends Item>(table: Table<T>, id: string): Promise<
   return mapRecordToItem(table, record)
 }
 
-export const scan = async <T extends Item>(table: Table<T>, filterByFormula?: string): Promise<T[]> => {
-  const records = await getAirtableTable(table).then(t =>
-    t.select(filterByFormula ? { filterByFormula } : {}).all()
-  );
+export type ScanParams = Omit<QueryParams<unknown>, "fields" | "cellFormat" | "method" | "returnFieldsByFieldId" | "pageSize" | "offset">
+
+export const scan = async <T extends Item>(table: Table<T>, params?: ScanParams): Promise<T[]> => {
+  const records = await getAirtableTable(table).then(t => t.select(params).all());
   return records.map(record => mapRecordToItem(table, record));
 }
 
