@@ -1,14 +1,14 @@
-import { scan } from '@/lib/db'
-import { Installation, installationsTable, Meeting, meetingsTable, participantsTableFor } from '@/lib/tables'
+import { scan } from '../../../lib/db'
+import { Installation, installationsTable, Meeting, meetingsTable, participantsTableFor } from '../../../lib/tables'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { WebClient } from '@slack/web-api'
 import { timingSafeEqual } from 'node:crypto'
-import env from '@/lib/env'
+import env from '../../../lib/env'
 import createHttpError from 'http-errors'
-import { findSlackId } from '@/lib/slack'
+import { findSlackId } from '../../../lib/slack'
 import { matcher } from './_matcher'
 import { followUpper } from './_followUpper'
-import { apiRoute } from '@/lib/apiRoute'
+import { apiRoute } from '../../../lib/apiRoute'
 
 export type RunResponse = {
   status: string

@@ -1,7 +1,7 @@
-import { update } from "@/lib/db"
-import { makeMessage } from "@/lib/slack"
-import { Installation, Meeting, meetingsTable, Participant } from "@/lib/tables"
-import { now } from "@/lib/timestamp"
+import { update } from "../../../lib/db"
+import { makeMessage } from "../../../lib/slack"
+import { Installation, Meeting, meetingsTable, Participant } from "../../../lib/tables"
+import { now } from "../../../lib/timestamp"
 import { WebClient } from "@slack/web-api"
 
 const shouldFollowUp = (meeting: Meeting) => {

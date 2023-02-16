@@ -1,8 +1,8 @@
 import { App } from "@slack/bolt";
 import { AppRunner } from "@seratch_/bolt-http-runner";
-import env from "@/lib/env";
-import { insert, remove, scan } from "@/lib/db";
-import { installationsTable } from "@/lib/tables";
+import env from "../../../lib/env";
+import { insert, remove, scan } from "../../../lib/db";
+import { installationsTable } from "../../../lib/tables";
 
 export const appRunner = new AppRunner({
   signingSecret: env.SLACK_SIGNING_SECRET,

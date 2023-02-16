@@ -1,8 +1,8 @@
-import { apiRoute } from "@/lib/apiRoute";
-import { get, insert, update } from "@/lib/db";
-import { acknowledgeSlackButton, ACTION_IDS, findSlackId, makeMessage } from "@/lib/slack";
-import { installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor } from "@/lib/tables";
-import { now } from "@/lib/timestamp";
+import { apiRoute } from "../../../lib/apiRoute";
+import { get, insert, update } from "../../../lib/db";
+import { acknowledgeSlackButton, ACTION_IDS, findSlackId, makeMessage } from "../../../lib/slack";
+import { installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor } from "../../../lib/tables";
+import { now } from "../../../lib/timestamp";
 import { BlockAction, ButtonAction } from "@slack/bolt";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { app, appRunner } from './_runner';

@@ -1,7 +1,7 @@
-import { insert } from "@/lib/db"
-import { ACTION_IDS, makeMessage } from "@/lib/slack"
-import { Installation, Meeting, meetingsTable, Participant } from "@/lib/tables"
-import { now } from "@/lib/timestamp"
+import { insert } from "../../../lib/db"
+import { ACTION_IDS, makeMessage } from "../../../lib/slack"
+import { Installation, Meeting, meetingsTable, Participant } from "../../../lib/tables"
+import { now } from "../../../lib/timestamp"
 import { WebClient } from "@slack/web-api"
 
 export const matcher = async (

@@ -1,4 +1,4 @@
-import { apiRoute } from '@/lib/apiRoute'
+import { apiRoute } from '../../lib/apiRoute'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export type StatusResponse = {
