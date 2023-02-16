@@ -26,7 +26,6 @@ export default apiRoute(async (
 
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.CONFIRM_MEETING_BUTTON,
-  acknowledgeSlackButton,
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
@@ -39,12 +38,13 @@ app.action<BlockAction<ButtonAction>>(
       { text: ":raised_hands: We met!", id: ACTION_IDS.COMPLETE_MEETING_BUTTON, value: meeting.id },
       { text: ":x: We cancelled our meeting", id: ACTION_IDS.DECLINE_MEETING_BUTTON, value: meeting.id  },
     ])})
+
+    await acknowledgeSlackButton(args)
   },
 )
 
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.COMPLETE_MEETING_BUTTON,
-  acknowledgeSlackButton,
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
@@ -87,12 +87,13 @@ app.action<BlockAction<ButtonAction>>(
         ])
       })
     }))
+
+    await acknowledgeSlackButton(args)
   },
 )
 
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.DECLINE_MEETING_BUTTON,
-  acknowledgeSlackButton,
   async (args) => {
     const meeting = await update(meetingsTable, {
       id: args.action.value,
@@ -104,12 +105,13 @@ app.action<BlockAction<ButtonAction>>(
     await args.say({ text, blocks: makeMessage(text, [
       { text: ":leftwards_arrow_with_hook: Undo, we are going to meet!", id: ACTION_IDS.CONFIRM_MEETING_BUTTON, value: meeting.id },
     ])})
+
+    await acknowledgeSlackButton(args)
   },
 )
 
 app.action<BlockAction<ButtonAction>>(
   /^RATE_MEETING_BUTTON_\d$/,
-  acknowledgeSlackButton,
   async (args) => {
     const [meetingId, participantId, rating]: [string, string, number] = JSON.parse(args.action.value)
 
@@ -122,5 +124,7 @@ app.action<BlockAction<ButtonAction>>(
 
     const text = `Thanks for your feedback!`;
     await args.say({ text, blocks: makeMessage(text) })
+
+    await acknowledgeSlackButton(args)
   },
 )

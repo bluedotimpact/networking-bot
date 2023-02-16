@@ -74,9 +74,9 @@ export function makeMessage(arg1: string, arg2?: string | ButtonDefinition[]): M
   }]
 }
 
+// Contrary to Slack standard advice, we wait for the end of the request to acknowledge the action
+// This is because Vercel only runs our code until we send a response back, so acknowledging kills our function
 export const acknowledgeSlackButton: Middleware<SlackActionMiddlewareArgs<BlockAction<ButtonAction>>> = async (args) => {
-  await args.ack();
-
   const previousMessage: MessageBlocks = args.body.message?.blocks;
   const newMessage: MessageBlocks = [
     previousMessage[0],
@@ -93,8 +93,7 @@ export const acknowledgeSlackButton: Middleware<SlackActionMiddlewareArgs<BlockA
     blocks: newMessage,
     replace_original: true,
   })
-
-  await args.next();
+  await args.ack();
 }
 
 export const findSlackId = (

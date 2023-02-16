@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Hit scheduler API
         run: |
-          curl --request POST \
+          curl \
+          --fail-with-body \
+          --request POST \
           --url 'https://networking-bot.vercel.app/api/scheduler/run' \
           --header 'x-api-key: ${{ secrets.SCHEDULER_API_KEY }}'
