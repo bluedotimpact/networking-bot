@@ -1,10 +1,11 @@
+import { apiRoute } from "@/lib/apiRoute";
 import { get, insert, update } from "@/lib/db";
 import { acknowledgeSlackButton, ACTION_IDS, findSlackId, makeMessage } from "@/lib/slack";
 import { installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor } from "@/lib/tables";
 import { now } from "@/lib/timestamp";
 import { BlockAction, ButtonAction } from "@slack/bolt";
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { app, appRunner } from './_app';
+import { app, appRunner } from './_runner';
 
 export const config = {
   api: {
@@ -12,16 +13,16 @@ export const config = {
   },
 };
 
-export default async function handle(
+export default apiRoute(async (
   req: NextApiRequest,
   res: NextApiResponse,
-) {
+) => {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" })
     return;
   }
   await appRunner.handleEvents(req, res);
-}
+})
 
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.CONFIRM_MEETING_BUTTON,

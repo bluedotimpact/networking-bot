@@ -106,6 +106,7 @@ export interface Participant extends Item {
 }
 
 export interface Installation extends Item {
+  'name': string,
   'slackTeamId': string,
   'slackInstallationJson': string,
   'participantsBaseId': string,
@@ -120,6 +121,7 @@ export const installationsTable: Table<Installation> = {
   baseId: env.AIRTABLE_INSTALLATIONS_BASE_ID,
   tableId: env.AIRTABLE_INSTALLATIONS_TABLE_ID,
   schema: {
+    'name': 'string',
     'slackTeamId': 'string',
     'slackInstallationJson': 'string',
     'participantsBaseId': 'string',

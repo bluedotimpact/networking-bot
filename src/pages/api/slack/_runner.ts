@@ -18,6 +18,7 @@ export const appRunner = new AppRunner({
         : installation.team!.id;
 
       await insert(installationsTable, {
+        name: installation.team?.name ?? installation.enterprise?.name ?? "",
         slackTeamId: teamId,
         slackInstallationJson: JSON.stringify(installation),
         participantsBaseId: "",

@@ -31,6 +31,4 @@ jobs:
       #   if: github.ref == 'refs/heads/master' && matrix.node-version == 'lts/*'
       #   run: npm run deploy:prod
       #   env:
-      #     VERCEL_ORG_ID: QbqUU7VQwMWpjbDCLDlR6ArA
-      #     VERCEL_PROJECT_ID: prj_TODO
       #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

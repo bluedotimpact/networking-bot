@@ -34,11 +34,12 @@ Complete:
 - Handle receiving feedback
 - restrict participants to a view
 - follow-ups
+- deployment
 
 Todo:
-- deployment
 - nice to have: smarter matcher logic
 - nice to have: time availabilities
+- nice to have: trigger run for a single installation
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 
@@ -59,12 +60,14 @@ You can create a new installation here: http://localhost:3000/api/slack/install
 
 And trigger the matcher by hitting: http://localhost:3000/api/scheduler/run
 
-To set up event callbacks to hit the right place, you can use ngrok:
+To set up OAuth and event callbacks to hit the right place, you can use ngrok:
 
 1. [Install ngrok](https://ngrok.com/docs/getting-started#step-2-install-the-ngrok-agent)
 2. Run `ngrok http 3000`
-3. In [the Slack console for '(dev) netbot'](https://api.slack.com/apps/A04LWUG8A3T/interactive-messages) under 'Interactivity & Shortcuts' paste in `https://your-ngrok-subdomain.ngrok.io/api/slack/events`, then click 'Save Changes'
+3. In the Slack console for '(local) networking bot':
+  - in [OAuth settings](https://api.slack.com/apps/A04PEDW8K3R/oauth), update the redirect URL to your ngrok endpoint
+  - in [Interactivity & Shortcuts](https://api.slack.com/apps/A04PEDW8K3R/interactive-messages) update the request URL to your ngrok endpoint
 
 ## Deployment
 
-This app is deployed using Vercel and uses an Airtable base as a database. API keys are stored safely in Vercel environment variables.
+This app is deployed using Vercel and uses an Airtable base as a database. API keys are stored safely in Vercel environment variables. GitHub Actions hits the scheduler endpoint.

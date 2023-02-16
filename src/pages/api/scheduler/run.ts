@@ -1,5 +1,5 @@
 import { scan } from '@/lib/db'
-import { Installation, installationsTable, Meeting, meetingsTable, Participant, participantsTableFor, Table } from '@/lib/tables'
+import { Installation, installationsTable, Meeting, meetingsTable, participantsTableFor } from '@/lib/tables'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { WebClient } from '@slack/web-api'
 import { timingSafeEqual } from 'node:crypto'
@@ -8,20 +8,27 @@ import createHttpError from 'http-errors'
 import { findSlackId } from '@/lib/slack'
 import { matcher } from './_matcher'
 import { followUpper } from './_followUpper'
+import { apiRoute } from '@/lib/apiRoute'
 
-export default async function handle(
+export type RunResponse = {
+  status: string
+}
+
+export default apiRoute(async (
   req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // const providedKey = Array.isArray(req.headers['api-key'])
-  //   ? req.headers['api-key'].join('')
-  //   : req.headers['api-key'];
-  // if (!providedKey || !timingSafeEqual(
-  //   Buffer.from(env.SCHEDULER_API_KEY),
-  //   Buffer.from(providedKey ?? '')
-  // )) {
-  //   throw createHttpError.Unauthorized('Missing or incorrect api-key');
-  // }
+  res: NextApiResponse<RunResponse>
+) => {
+  if (env.SCHEDULER_API_KEY !== "UNSAFE_ONLY_USE_LOCALLY_NO_AUTH") {
+    const providedKey = Array.isArray(req.headers['x-api-key'])
+      ? req.headers['x-api-key'].join('')
+      : req.headers['x-api-key'];
+    if (!providedKey || !timingSafeEqual(
+      Buffer.from(env.SCHEDULER_API_KEY),
+      Buffer.from(providedKey ?? '')
+    )) {
+      throw createHttpError.Unauthorized('Missing or incorrect API key');
+    }
+  }
 
   const installations = await scan(installationsTable)
   const meetings = await scan(meetingsTable)
@@ -36,7 +43,7 @@ export default async function handle(
   }));
 
   res.status(200).json({ 'status': 'Complete' })
-}
+})
 
 const handleInstallation = async (installation: Installation, meetings: Meeting[]) => {
   // Setup Slack client for this installation

@@ -1,0 +1,22 @@
+display_information:
+  name: (local) networking bot
+features:
+  bot_user:
+    display_name: (local) networking bot
+    always_online: false
+oauth_config:
+  redirect_urls:
+    - https://abc-def.ngrok.io/api/slack/oauth_redirect
+  scopes:
+    bot:
+      - chat:write
+      - mpim:write
+      - users:read
+      - users:read.email
+settings:
+  interactivity:
+    is_enabled: true
+    request_url: https://abc-def.ngrok.io/api/slack/events
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
