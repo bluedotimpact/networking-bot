@@ -3,6 +3,7 @@ import { makeMessage } from "../../../lib/slack"
 import { Installation, Meeting, meetingsTable, Participant } from "../../../lib/tables"
 import { now } from "../../../lib/timestamp"
 import { WebClient } from "@slack/web-api"
+import { getAirtableLink, slackAlert } from "src/lib/slackAlert"
 
 const shouldFollowUp = (meeting: Meeting) => {
   // Already modified recently, no need for a reminder
@@ -33,7 +34,7 @@ export const followUpper = async (
     const participantsInMeeting = participants.filter(p => participantIds.includes(p.id))
 
     if (participantIds.length !== participantsInMeeting.length) {
-      console.warn(`Failed to follow up meeting ${meeting.id}, because can't map participants back to Slack IDs`)
+      slackAlert(`Warning: Installation ${installation.name} failed to follow up meeting ${meeting.id} because we couldn't find the participants in Airtable or Slack. ${getAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`)
       return;
     }
 
@@ -43,7 +44,7 @@ export const followUpper = async (
 
     const channelId = res.channel?.id
     if (!channelId) {
-      console.warn(`Failed to open mpim with ${participantsInMeeting.map(p => p.slackId)} in installation ${installation.id}`)
+      slackAlert(`Error: Failed to open mpim with ${participantsInMeeting.map(p => p.slackId)} in installation ${installation.id}. ${getAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`)
       return;
     }
 

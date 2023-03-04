@@ -3,6 +3,7 @@ import { ACTION_IDS, makeMessage } from "../../../lib/slack"
 import { Installation, Meeting, meetingsTable, Participant } from "../../../lib/tables"
 import { now } from "../../../lib/timestamp"
 import { WebClient } from "@slack/web-api"
+import { slackAlert } from "src/lib/slackAlert"
 
 export const matcher = async (
   slack: WebClient,
@@ -19,7 +20,8 @@ export const matcher = async (
 
     const channelId = res.channel?.id
     if (!channelId) {
-      throw new Error(`Failed to open mpim with ${match.map(p => p.slackId)} in installation ${installation.id}`)
+      slackAlert(`Error: Failed to open mpim with ${match.map(p => p.slackId)} in installation ${installation.id}.`)
+      return;
     }
 
     const meeting = await insert(meetingsTable, {

@@ -72,3 +72,5 @@ Data is stored in the AirTable base here: https://airtable.com/appnNmNoNMB6crg6I
 ## Deployment
 
 This app is deployed using Vercel and uses an Airtable base as a database. API keys are stored safely in Vercel environment variables. GitHub Actions hits the scheduler endpoint.
+
+To deploy a new version, simply commit to the master branch. GitHub Actions automatically handles CD, via `npm run deploy:prod`.

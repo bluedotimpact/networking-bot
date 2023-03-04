@@ -9,6 +9,7 @@ import { findSlackId } from '../../../lib/slack'
 import { matcher } from './_matcher'
 import { followUpper } from './_followUpper'
 import { apiRoute } from '../../../lib/apiRoute'
+import { getParticipantAirtableLink, slackAlert } from 'src/lib/slackAlert'
 
 export type RunResponse = {
   status: string
@@ -66,7 +67,7 @@ const handleInstallation = async (installation: Installation, meetings: Meeting[
     // - This is less complex: Otherwise we'd need to handle custom mappings.
     .filter(p => {
       if (p.slackEmail === undefined) {
-        console.warn(`Skipping participant ${p.id} because we don't have a Slack email for them`)
+        slackAlert(`Warning: Installation ${installation.name} skipped participant ${p.id} because they don't have a Slack email. ${getParticipantAirtableLink(installation, p.id)}.`)
         return false;
       }
       return true;
@@ -78,7 +79,7 @@ const handleInstallation = async (installation: Installation, meetings: Meeting[
           slackId: findSlackId(p, members),
         }
       } catch (err) {
-        console.warn(`Skipping participant ${p.id} because we couldn't match their slack email to a user id`)
+        slackAlert(`Warning: Installation ${installation.name} skipped participant ${p.id} because we couldn't match their Slack email to a Slack user. ${getParticipantAirtableLink(installation, p.id)}.`)
         return [];
       }
     });

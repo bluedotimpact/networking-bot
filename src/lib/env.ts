@@ -14,6 +14,9 @@ const envVars = [
   "SLACK_REDIRECT_URI",
 
   "SCHEDULER_API_KEY",
+
+  "ALERTS_SLACK_CHANNEL_ID",
+  "ALERTS_SLACK_BOT_TOKEN",
 ] as const;
 
 export type Env = Record<(typeof envVars)[number], string>;
