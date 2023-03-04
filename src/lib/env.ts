@@ -24,15 +24,21 @@ export type Env = Record<(typeof envVars)[number], string>;
 // Validate the environment
 const constructEnv = (): Env => {
   const env = {} as Env;
+  const unset = []
 
   for (const envVar of envVars) {
     const value = process.env[envVar]?.trim();
     if (value === undefined || value.length === 0) {
-      throw new Error('Unset environment variable: ' + envVar);
+      unset.push(envVar)
+      continue;
     }
     env[envVar] = value;
   }
 
+  if (unset.length > 0) {
+    throw new Error('Unset environment variables: ' + unset.join(', '));
+  }
+  
   return env;
 }
 

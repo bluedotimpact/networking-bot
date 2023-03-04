@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import type { Request, Response } from 'express';
 import { createMocks } from "node-mocks-http";
 import handle from "./status";
+import { describe, expect, test } from "vitest";
 
 describe('/api/status', () => {
   test('returns an online status', async () => {
