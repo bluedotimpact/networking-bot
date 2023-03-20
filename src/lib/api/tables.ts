@@ -1,36 +1,36 @@
-import env from "./env"
+import env from './env';
 
-export type BaseTypeStrings = NonNullToString<any> | ToString<any>
+export type BaseTypeStrings = NonNullToString<any> | ToString<any>;
 
 type NonNullToString<T> =
-  T extends string ? "string" :
-  T extends number ? "number" :
-  T extends boolean ? "boolean" :
-  T extends number[] ? "number[]" :
-  T extends string[] ? "string[]" :
-  T extends boolean[] ? "boolean[]" :
-  never;
+  T extends string ? 'string' :
+    T extends number ? 'number' :
+      T extends boolean ? 'boolean' :
+        T extends number[] ? 'number[]' :
+          T extends string[] ? 'string[]' :
+            T extends boolean[] ? 'boolean[]' :
+              never;
 
 export type ToString<T> =
   null extends T ? `${NonNullToString<T>} | null` : NonNullToString<T>;
 
 export type FromString<T> =
-  T extends "string" ? string :
-  T extends "string | null" ? string | null :
-  T extends "number" ? number :
-  T extends "number | null" ? number | null :
-  T extends "boolean" ? boolean :
-  T extends "boolean | null" ? boolean | null :
-  T extends "number[]" ? number[] :
-  T extends "number[] | null" ? number[] | null :
-  T extends "string[]" ? string[] :
-  T extends "string[] | null" ? string[] | null :
-  T extends "boolean[]" ? boolean[] :
-  T extends "boolean[] | null" ? boolean[] | null :
-  never;
+  T extends 'string' ? string :
+    T extends 'string | null' ? string | null :
+      T extends 'number' ? number :
+        T extends 'number | null' ? number | null :
+          T extends 'boolean' ? boolean :
+            T extends 'boolean | null' ? boolean | null :
+              T extends 'number[]' ? number[] :
+                T extends 'number[] | null' ? number[] | null :
+                  T extends 'string[]' ? string[] :
+                    T extends 'string[] | null' ? string[] | null :
+                      T extends 'boolean[]' ? boolean[] :
+                        T extends 'boolean[] | null' ? boolean[] | null :
+                          never;
 
 export interface TypeDef {
-  single: "string" | "number" | "boolean",
+  single: 'string' | 'number' | 'boolean',
   array: boolean,
   nullable: boolean,
 }
@@ -38,34 +38,34 @@ export interface TypeDef {
 export const parseType = (t: BaseTypeStrings): TypeDef => {
   if (t.endsWith('[] | null')) {
     return {
-      single: t.slice(0, -('[] | null'.length)) as TypeDef["single"],
+      single: t.slice(0, -('[] | null'.length)) as TypeDef['single'],
       array: true,
       nullable: true,
-    }
+    };
   }
 
   if (t.endsWith('[]')) {
     return {
-      single: t.slice(0, -('[]'.length)) as TypeDef["single"],
+      single: t.slice(0, -('[]'.length)) as TypeDef['single'],
       array: true,
       nullable: false,
-    }
+    };
   }
 
   if (t.endsWith(' | null')) {
     return {
-      single: t.slice(0, -(' | null'.length)) as TypeDef["single"],
+      single: t.slice(0, -(' | null'.length)) as TypeDef['single'],
       array: false,
       nullable: true,
-    }
+    };
   }
 
-  return  {
-    single: t as TypeDef["single"],
+  return {
+    single: t as TypeDef['single'],
     array: false,
     nullable: false,
-  }
-}
+  };
+};
 
 // Value for possible field mapping
 // For arrays, this may be:
@@ -91,14 +91,14 @@ export const participantsTableFor = (installation: Installation): Table<Particip
   baseId: installation.participantsBaseId,
   tableId: installation.participantsTableId,
   schema: {
-    'slackEmail': 'string',
-    'dimensions': 'number[]',
+    slackEmail: 'string',
+    dimensions: 'number[]',
   },
   mappings: {
-    'slackEmail': installation.participantsSlackEmailFieldName, 
-    'dimensions': JSON.parse(installation.participantsDimensionFieldNamesJson),
+    slackEmail: installation.participantsSlackEmailFieldName,
+    dimensions: JSON.parse(installation.participantsDimensionFieldNamesJson),
   },
-})
+});
 
 export interface Participant extends Item {
   'slackEmail': string,
@@ -121,16 +121,16 @@ export const installationsTable: Table<Installation> = {
   baseId: env.AIRTABLE_INSTALLATIONS_BASE_ID,
   tableId: env.AIRTABLE_INSTALLATIONS_TABLE_ID,
   schema: {
-    'name': 'string',
-    'slackTeamId': 'string',
-    'slackInstallationJson': 'string',
-    'participantsBaseId': 'string',
-    'participantsTableId': 'string',
-    'participantsViewId': 'string | null',
-    'participantsSlackEmailFieldName': 'string',
-    'participantsDimensionFieldNamesJson': 'string',
+    name: 'string',
+    slackTeamId: 'string',
+    slackInstallationJson: 'string',
+    participantsBaseId: 'string',
+    participantsTableId: 'string',
+    participantsViewId: 'string | null',
+    participantsSlackEmailFieldName: 'string',
+    participantsDimensionFieldNamesJson: 'string',
   },
-}
+};
 
 export interface Meeting extends Item {
   'slackMpim': string,
@@ -138,7 +138,7 @@ export interface Meeting extends Item {
   'participantIdsJson': string,
   'createdAt': number,
   'lastModifiedAt': number,
-  'state': "PENDING" | "CONFIRMED" | "COMPLETED" | "DECLINED",
+  'state': 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'DECLINED',
 }
 
 export const meetingsTable: Table<Meeting> = {
@@ -146,14 +146,14 @@ export const meetingsTable: Table<Meeting> = {
   baseId: env.AIRTABLE_MEETINGS_BASE_ID,
   tableId: env.AIRTABLE_MEETINGS_TABLE_ID,
   schema: {
-    'slackMpim': 'string',
-    'installationId': 'string',
-    'participantIdsJson': 'string',
-    'createdAt': 'number',
-    'lastModifiedAt': 'number',
-    'state': 'string',
+    slackMpim: 'string',
+    installationId: 'string',
+    participantIdsJson: 'string',
+    createdAt: 'number',
+    lastModifiedAt: 'number',
+    state: 'string',
   },
-}
+};
 
 export interface MeetingFeedback extends Item {
   'participantId': string,
@@ -167,11 +167,11 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
   baseId: env.AIRTABLE_MEETING_FEEDBACKS_BASE_ID,
   tableId: env.AIRTABLE_MEETING_FEEDBACKS_TABLE_ID,
   schema: {
-    'participantId': 'string',
-    'meetingId': 'string',
-    'value': 'number',
-    'createdAt': 'number',
+    participantId: 'string',
+    meetingId: 'string',
+    value: 'number',
+    createdAt: 'number',
   },
-}
+};
 
 // TODO: scheduler run result table?

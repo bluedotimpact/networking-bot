@@ -1,6 +1,6 @@
 # networking-bot
 
-A Slack app that pairs up paticipants for 1:1 conversations.
+A Slack app that pairs up participants for 1:1 conversations.
 
 ![Architecture diagram](./architecture.svg)
 
@@ -27,11 +27,11 @@ When users click buttons in the message, events are triggered. These are handled
 
 Complete:
 - Set up project with API
-- Build db helper to safely use AirTable as a database
+- Build db helper to safely use Airtable as a database
 - Set up Slack OAuth
 - Set up matcher basics
 - Set up multi-tenant participant fetching
-- State managment, i.e. confirmed/completed
+- State management, i.e. confirmed/completed
 - Handle receiving meeting feedback
 - Restrict participants to an Airtable view
 - Send follow-ups if no response
@@ -50,7 +50,7 @@ https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d951
 1. Clone this repository
 2. Install Node
 3. Install dependencies with `npm install`
-4. Get access to the [[Example] Slack networking bot](https://airtable.com/appnNmNoNMB6crg6I/tblS8xNuLljBS5Lml/viwx3r0P8Be3s78rh?blocks=hide) base and create an [AirTable personal access token](https://support.airtable.com/docs/creating-and-using-api-keys-and-access-tokens)
+4. Get access to the [[Example] Slack networking bot](https://airtable.com/appnNmNoNMB6crg6I/tblS8xNuLljBS5Lml/viwx3r0P8Be3s78rh?blocks=hide) base and create an [Airtable personal access token](https://support.airtable.com/docs/creating-and-using-api-keys-and-access-tokens) with the scopes 'data.records:read', 'data.records:write', 'schema.bases:read', 'block:manage'.
 5. Set the environment variables in [`.env.local`](./.env.local)
 6. Run the server with `npm start`
 
@@ -67,7 +67,7 @@ So that OAuth and event callbacks to hit the right place, use ngrok:
 
 You should then be able to use the app at your ngrok url.
 
-Data is stored in the AirTable base here: https://airtable.com/appnNmNoNMB6crg6I/tblzo9A4hjnxs8ezd/viwr3hvlKM7ebsf9v
+Data is stored in the Airtable base here: https://airtable.com/appnNmNoNMB6crg6I/tblzo9A4hjnxs8ezd/viwr3hvlKM7ebsf9v
 
 ## Deployment
 

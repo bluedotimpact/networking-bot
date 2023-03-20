@@ -1,50 +1,34 @@
-import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import axios, { isAxiosError } from 'axios'
-import { StatusResponse } from './api/status'
+import {
+  BookOpenIcon, CodeBracketIcon, PlayIcon, PlusIcon,
+} from '@heroicons/react/24/outline';
+import { ActionButton } from 'src/components/ActionButton';
+import { Page } from 'src/components/Page';
+import { H1 } from 'src/components/Text';
+import { withAuth } from 'src/lib/client/withAuth';
 
-export default function Home() {
-  const [status, setStatus] = useState('Loading...')
-  useEffect(() => {
-    axios<StatusResponse>({
-      method: 'get',
-      url: '/api/status'
-    }).then(res => {
-      setStatus(res.data.status)
-    }).catch(err => {
-      setStatus('Error: ' + (isAxiosError(err) ? err.message : String(err)))
-    })
-  }, [])
-
-  const [isLocal, setIsLocal] = useState(false)
-  useEffect(() => {
-    setIsLocal(
-      typeof window !== "undefined"
-      && (
-        window.location.hostname === "localhost"
-        || window.location.hostname.endsWith(".ngrok.io")
-      )
-    );
-  }, [])
-
+const Home: React.FC = withAuth(() => {
   return (
-    <>
-      <Head>
-        <title>networking-bot</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <h1>networking-bot</h1>
-      <p>Status: {status}</p>
-      <h2>Common actions:</h2>
-      <ul>
-        <li><a href="https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62">Read documentation</a></li>
-        <li><a href="https://github.com/bluedotimpact/networking-bot">View code</a></li>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <li><a href="/api/slack/install">Add to Slack</a></li>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <li><a href={isLocal ? "/api/scheduler/run" : "https://github.com/bluedotimpact/networking-bot/actions/workflows/cron.yaml"}>Run scheduler</a></li>
-      </ul>
-    </>
-  )
-}
+    <Page>
+      <H1>BlueBot control panel</H1>
+      <div className="grid grid-cols-2 gap-4">
+        <ActionButton icon={PlayIcon} href="/run">
+          Run
+        </ActionButton>
+
+        <ActionButton icon={PlusIcon} href="/api/slack/install">
+          Add installation
+        </ActionButton>
+
+        <ActionButton icon={BookOpenIcon} href="https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62">
+          Read docs
+        </ActionButton>
+
+        <ActionButton icon={CodeBracketIcon} href="https://github.com/bluedotimpact/networking-bot">
+          View code
+        </ActionButton>
+      </div>
+    </Page>
+  );
+});
+
+export default Home;
