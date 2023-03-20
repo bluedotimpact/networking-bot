@@ -1,13 +1,13 @@
-name: cron
+name: trigger
 
 on:
-  schedule:
+  # schedule:
     # 5pm UTC every Monday
-    - cron: '0 17 * * 1'
+    # - cron: '0 17 * * 1'
   workflow_dispatch:
 
 jobs:
-  cron:
+  trigger:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
