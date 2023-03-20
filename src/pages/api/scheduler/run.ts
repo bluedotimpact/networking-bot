@@ -21,6 +21,7 @@ export default apiRoute(async (
   req: NextApiRequest,
   res: NextApiResponse<RunResponse>,
 ) => {
+  // When removing, also remove security exemption
   if (env.SCHEDULER_API_KEY !== 'UNSAFE_ONLY_USE_LOCALLY_NO_AUTH') {
     const providedKey = Array.isArray(req.headers['x-api-key'])
       ? req.headers['x-api-key'].join('')
@@ -46,7 +47,7 @@ export default apiRoute(async (
   }));
 
   res.status(200).json({ status: 'Complete' });
-});
+}, 'insecure_no_auth');
 
 const handleInstallation = async (installation: Installation, meetings: Meeting[]) => {
   // Setup Slack client for this installation

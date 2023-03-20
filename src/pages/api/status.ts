@@ -10,4 +10,4 @@ export default apiRoute(async (
   res: NextApiResponse<StatusResponse>,
 ) => {
   res.status(200).json({ status: 'Online' });
-});
+}, 'insecure_no_auth');
