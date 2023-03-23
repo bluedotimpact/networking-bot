@@ -1,11 +1,11 @@
 import { WebClient } from '@slack/web-api';
 import { slackAlert } from 'src/lib/api/slackAlert';
-import { insert } from '../../../lib/api/db';
-import { ACTION_IDS, makeMessage } from '../../../lib/api/slack';
+import { insert } from '../db';
+import { ACTION_IDS, makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
-} from '../../../lib/api/tables';
-import { now } from '../../../lib/timestamp';
+} from '../tables';
+import { now } from '../../timestamp';
 
 export const matcher = async (
   slack: WebClient,

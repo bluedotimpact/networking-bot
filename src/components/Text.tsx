@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 export interface TextProps {
-  className: string;
+  className?: string;
 }
 
 export const H1: React.FC<React.PropsWithChildren<TextProps>> = ({ children, className }) => {

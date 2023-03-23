@@ -1,11 +1,11 @@
 import { WebClient } from '@slack/web-api';
 import { getAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
-import { update } from '../../../lib/api/db';
-import { makeMessage } from '../../../lib/api/slack';
+import { update } from '../db';
+import { makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
-} from '../../../lib/api/tables';
-import { now } from '../../../lib/timestamp';
+} from '../tables';
+import { now } from '../../timestamp';
 
 const shouldFollowUp = (meeting: Meeting) => {
   // Already modified recently, no need for a reminder

@@ -9,7 +9,7 @@ import { Page } from 'src/components/Page';
 import { H1 } from 'src/components/Text';
 import env from 'src/lib/client/env';
 import { useAuthState } from 'src/lib/client/authState';
-import { LoginResponse } from 'src/pages/api/login/google';
+import { LoginResponse } from 'src/pages/api/user/login/google';
 import Button from './Button';
 
 export const LoginPage: React.FC = () => {
@@ -72,7 +72,7 @@ const GoogleLoginButton: React.FC<LoginButtonProps> = ({ setError, setLoading })
 
           const loginResponse = await axios<LoginResponse>({
             method: 'post',
-            url: '/api/login/google',
+            url: '/api/user/login/google',
             data: { idToken: user.id_token },
           });
 

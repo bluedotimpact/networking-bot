@@ -1,16 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { WebClient } from '@slack/web-api';
 import { timingSafeEqual } from 'node:crypto';
 import createHttpError from 'http-errors';
-import { getParticipantAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
+import { handleInstallation } from 'src/lib/api/runner/core';
 import { scan } from '../../../lib/api/db';
 import {
-  Installation, installationsTable, Meeting, meetingsTable, participantsTableFor,
+  installationsTable, meetingsTable,
 } from '../../../lib/api/tables';
 import env from '../../../lib/api/env';
-import { findSlackId } from '../../../lib/api/slack';
-import { matcher } from './_matcher';
-import { followUpper } from './_followUpper';
 import { apiRoute } from '../../../lib/api/apiRoute';
 
 export type RunResponse = {
@@ -48,45 +44,3 @@ export default apiRoute(async (
 
   res.status(200).json({ status: 'Complete' });
 }, 'insecure_no_auth');
-
-const handleInstallation = async (installation: Installation, meetings: Meeting[]) => {
-  // Setup Slack client for this installation
-  const slack = new WebClient(
-    JSON.parse(installation.slackInstallationJson).bot.token,
-    { teamId: installation.slackTeamId },
-  );
-
-  // Get all the people to match
-  const { members } = await slack.users.list();
-  if (members === undefined) {
-    throw new Error(`Failed to get Slack members for installation ${installation.id}`);
-  }
-  const participants = (await scan(
-    participantsTableFor(installation),
-    installation.participantsViewId ? { view: installation.participantsViewId } : undefined,
-  ))
-    // We filter in JS, rather than pushing the filters to Airtable, because:
-    // - This is faster: Airtable is really slow at applying filters.
-    // - This is less complex: Otherwise we'd need to handle custom mappings.
-    .filter((p) => {
-      if (p.slackEmail === undefined) {
-        slackAlert(`Warning: Installation ${installation.name} skipped participant ${p.id} because they don't have a Slack email. ${getParticipantAirtableLink(installation, p.id)}.`);
-        return false;
-      }
-      return true;
-    })
-    .flatMap((p) => {
-      try {
-        return {
-          ...p,
-          slackId: findSlackId(p, members),
-        };
-      } catch (err) {
-        slackAlert(`Warning: Installation ${installation.name} skipped participant ${p.id} because we couldn't match their Slack email to a Slack user. ${getParticipantAirtableLink(installation, p.id)}.`);
-        return [];
-      }
-    });
-
-  await matcher(slack, installation, participants, meetings);
-  await followUpper(slack, installation, participants, meetings);
-};

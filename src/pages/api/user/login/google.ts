@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { assertTokenValid } from 'src/lib/api/tokens';
-import { apiRoute } from '../../../lib/api/apiRoute';
+import { apiRoute } from '../../../../lib/api/apiRoute';
 
 export type LoginResponse = {
   accessToken: string,
