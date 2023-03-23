@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Page } from 'src/components/Page';
 import { H1 } from 'src/components/Text';
 import env from 'src/lib/client/env';
-import { useAuthState } from 'src/lib/client/withAuth';
+import { useAuthState } from 'src/lib/client/authState';
 import { LoginResponse } from 'src/pages/api/login/google';
 import Button from './Button';
 
