@@ -56,16 +56,15 @@ https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d951
 
 ### Local usage
 
-So that OAuth and event callbacks to hit the right place, use ngrok:
+So that OAuth and event callbacks to hit the right place, use localhost.run:
 
-1. [Install ngrok](https://ngrok.com/docs/getting-started#step-2-install-the-ngrok-agent)
-2. Run `ngrok http 3000`
-3. In the Slack console for '(local) networking bot':
-  - in [OAuth settings](https://api.slack.com/apps/A04PEDW8K3R/oauth), update the redirect URL to your ngrok endpoint
-  - in [Interactivity & Shortcuts](https://api.slack.com/apps/A04PEDW8K3R/interactive-messages) update the request URL to your ngrok endpoint
-4. In [.env.local](./.env.local) update the SLACK_REDIRECT_URI
+1. Run `ssh -R 80:localhost:8080 nokey@localhost.run`
+2. In the Slack console for '(local) networking bot':
+  - in [OAuth settings](https://api.slack.com/apps/A04PEDW8K3R/oauth), update the redirect URL to your lhr.life endpoint
+  - in [Interactivity & Shortcuts](https://api.slack.com/apps/A04PEDW8K3R/interactive-messages) update the request URL to your lhr.life endpoint
+3. In [.env.local](./.env.local) update the SLACK_REDIRECT_URI
 
-You should then be able to use the app at your ngrok url.
+You should then be able to use the app at your lhr.life url.
 
 Data is stored in the Airtable base here: https://airtable.com/appnNmNoNMB6crg6I/tblzo9A4hjnxs8ezd/viwr3hvlKM7ebsf9v
 

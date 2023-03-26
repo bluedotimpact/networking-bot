@@ -1,12 +1,14 @@
 display_information:
-  name: (local) networking bot
+  name: (local) BlueBot
+  description: A networking bot for tailed 1-1 introductions
+  background_color: "#0037ff"
 features:
   bot_user:
-    display_name: (local) networking bot
+    display_name: (local) BlueBot
     always_online: false
 oauth_config:
   redirect_urls:
-    - https://abc-def.ngrok.io/api/slack/oauth_redirect
+    - https://abcd123.lhr.life/api/slack/oauth_redirect
   scopes:
     bot:
       - chat:write
@@ -16,7 +18,7 @@ oauth_config:
 settings:
   interactivity:
     is_enabled: true
-    request_url: https://abc-def.ngrok.io/api/slack/events
+    request_url: https://abcd123.lhr.life/api/slack/events
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
