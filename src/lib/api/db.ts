@@ -27,10 +27,40 @@ const airtableFieldTypeToJSType: Record<string, string> = {
   rating: 'number',
   richText: 'string',
   duration: 'number',
+  multipleRecordLinks: 'string',
+};
+
+// TODO: type checking
+const airtableFieldTypeToJSMapper: Record<string, (value: any, tsType: BaseTypeStrings) => any> = {
+  multipleRecordLinks: (value, tsType) => {
+    if (tsType.startsWith('string[]')) {
+      return value;
+    }
+    if (tsType.startsWith('string')) {
+      if (value.length === 1) {
+        return value[0];
+      }
+      throw new Error(`Tried coercing multipleRecordLinks to a string, but there were ${value.length} entries`);
+    }
+    throw new Error(`Cannot coerce multipleRecordLinks to ${tsType}`);
+  },
+};
+
+// TODO: type checking
+const jsToAirtableFieldTypeMapper: Record<string, (value: any) => any> = {
+  multipleRecordLinks: (value) => {
+    if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      return [value];
+    }
+    throw new Error(`Cannot coerce ${typeof value} to multipleRecordLinks`);
+  },
 };
 
 // NB: because we include mappings, we can't return a AirtableTable<FieldSet & T>
-const getAirtableTable = async <T extends Item>(table: Table<T>): Promise<AirtableTable<FieldSet>> => {
+const getAirtableTable = async <T extends Item>(table: Table<T>): Promise<AirtableTable<FieldSet> & { fields: { name: string, type: string }[] }> => {
   const airtableTable = airtable.base(table.baseId).table<FieldSet>(table.tableId);
 
   // Verify schema matches what we expect
@@ -71,7 +101,7 @@ const getAirtableTable = async <T extends Item>(table: Table<T>): Promise<Airtab
     });
   });
 
-  return airtableTable;
+  return Object.assign(airtableTable, { fields });
 };
 
 const typeMatches = (actualType: string, expectedType: TypeDef, isArray: boolean): boolean => {
@@ -107,15 +137,15 @@ export function assertMatchesSchema<T extends Item>(
         && (value as unknown[]).every((entry) => typeof entry === expectedType.single));
 
     if (!isCorrectType) {
-      throw new Error(`Item ${direction} ${table.name} item has invalid value for field '${fieldName}' (actual type ${typeof value}, but expected ${type})`);
+      throw new Error(`Item ${direction} ${table.name} table has invalid value for field '${fieldName}' (actual type ${typeof value}, but expected ${type})`);
     }
   });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const backfillFor = (type: BaseTypeStrings): FromString<any> => {
-  if (type === 'number') {
-    throw new Error(`Empty value for field type ${type}, unsure how to backfill.`);
+const backfillFor = (tsType: BaseTypeStrings): FromString<any> => {
+  if (tsType === 'number') {
+    throw new Error(`Empty value for field type ${tsType}, unsure how to backfill.`);
   }
 
   return {
@@ -130,25 +160,33 @@ const backfillFor = (type: BaseTypeStrings): FromString<any> => {
     'string[] | null': null,
     'number[] | null': null,
     'boolean[] | null': null,
-  }[type];
+  }[tsType];
 };
 
 const mapRecordToItem = <T extends Item>(table: Table<T>, record: AirtableRecord<FieldSet>): T => {
   const item = {} as T;
 
-  (Object.entries(table.schema) as ([keyof Omit<T, 'id'> & string, BaseTypeStrings])[]).forEach(([k, v]) => {
+  (Object.entries(table.schema) as ([keyof Omit<T, 'id'> & string, BaseTypeStrings])[]).forEach(([fieldName, tsType]) => {
     let value: FieldSet[string] | FieldSet[string][] | undefined;
-    const mappings: string | string[] | undefined = table.mappings?.[k];
+    const mappings: string | string[] | undefined = table.mappings?.[fieldName];
 
     if (Array.isArray(mappings)) {
-      value = mappings.map((fieldName) => record.get(fieldName));
+      value = mappings.map((arrFieldName) => record.get(arrFieldName));
     } else if (mappings) {
       value = record.get(mappings);
     } else {
-      value = record.get(k);
+      value = record.get(fieldName);
     }
 
-    item[k as keyof T] = (value ?? backfillFor(v)) as T[keyof T];
+    // @ts-expect-error: added in getAirtableTable
+    // eslint-disable-next-line no-underscore-dangle
+    const airtableType = record._table.fields.find((f) => f.name === fieldName)?.type;
+
+    if (value && airtableFieldTypeToJSMapper[airtableType]) {
+      value = airtableFieldTypeToJSMapper[airtableType](value, tsType);
+    }
+
+    item[fieldName as keyof T] = (value ?? backfillFor(tsType)) as T[keyof T];
   });
 
   item.id = record.id;
@@ -156,6 +194,59 @@ const mapRecordToItem = <T extends Item>(table: Table<T>, record: AirtableRecord
   assertMatchesSchema(table, item);
 
   return item;
+};
+
+const mapItemToRecord = async <T extends Item>(table: Table<T>, item: Omit<T, 'id'> | Partial<T>): Promise<FieldSet> => {
+  const record = {} as FieldSet;
+
+  (Object.entries(table.schema) as ([keyof Omit<T, 'id'> & string, BaseTypeStrings])[]).forEach(([fieldName]) => {
+    const mappings: string | string[] | undefined = table.mappings?.[fieldName];
+
+    // TODO: handle array mappings
+    if (Array.isArray(mappings)) {
+      // throw new Error('Not implemented')
+      mappings.forEach((arrFieldName, index) => {
+        const itemValues = item[fieldName];
+        if (!Array.isArray(itemValues)) {
+          throw new Error(`Expected field ${fieldName} to be an array`);
+        }
+        if (itemValues.length !== mappings.length) {
+          throw new Error(`Field ${fieldName} has length ${itemValues.length}, different to mappings of length ${mappings.length}`);
+        }
+        record[arrFieldName] = itemValues[index];
+      });
+    } else if (mappings) {
+      record[mappings] = item[fieldName] as any;
+    } else {
+      record[fieldName] = item[fieldName] as any;
+    }
+  });
+
+  const meta = await axios<{
+    tables: { id: string, fields: { name: string, type: string }[] }[]
+  }>({
+    url: `https://api.airtable.com/v0/meta/bases/${table.baseId}/tables`,
+    headers: {
+      Authorization: `Bearer ${env.AIRTABLE_PERSONAL_ACCESS_TOKEN}`,
+    },
+  });
+  const fields = meta.data.tables.find((t) => t.id === table.tableId)?.fields;
+  if (!fields) {
+    throw new Error(`Failed to find table ${table.tableId} in base ${table.baseId}`);
+  }
+
+  Object.entries(record).forEach(([fieldName, value]) => {
+    const airtableType = fields.find((f) => f.name === fieldName)?.type;
+    if (!airtableType) {
+      throw new Error(`Failed to map field to AirTable record, as not in schema: ${fieldName}`);
+    }
+
+    if (jsToAirtableFieldTypeMapper[airtableType]) {
+      record[fieldName] = jsToAirtableFieldTypeMapper[airtableType](value);
+    }
+  });
+
+  return record;
 };
 
 export const get = async <T extends Item>(table: Table<T>, id: string): Promise<T> => {
@@ -175,14 +266,14 @@ export const scan = async <T extends Item>(table: Table<T>, params?: ScanParams)
 
 export const insert = async <T extends Item>(table: Table<T>, data: Omit<T, 'id'>): Promise<T> => {
   assertMatchesSchema(table, { ...data, id: 'placeholder' }, { direction: 'for' });
-  const record = await getAirtableTable(table).then((t) => t.create(data as T & FieldSet));
+  const record = await getAirtableTable(table).then(async (t) => t.create(await mapItemToRecord(table, data)));
   return mapRecordToItem(table, record);
 };
 
 export const update = async <T extends Item>(table: Table<T>, data: Partial<T> & { id: T['id'] }): Promise<T> => {
   assertMatchesSchema(table, { ...data }, { direction: 'for', partial: true });
   const { id, ...withoutId } = data;
-  const record = await getAirtableTable(table).then((t) => t.update(data.id, withoutId as Partial<T> & FieldSet));
+  const record = await getAirtableTable(table).then(async (t) => t.update(data.id, await mapItemToRecord(table, withoutId as Partial<T>)));
   return mapRecordToItem(table, record);
 };
 
