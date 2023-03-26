@@ -49,7 +49,7 @@ const InstallationRow: React.FC<InstallationRowProps> = ({ installation, authSta
   >();
 
   return (
-    <div className="flex items-center rounded hover:bg-slate-200 p-2 gap-2">
+    <div className="flex items-center rounded hover:bg-slate-200 p-2 gap-4">
       <p className="flex-1">
         {installation.name}
         {' '}

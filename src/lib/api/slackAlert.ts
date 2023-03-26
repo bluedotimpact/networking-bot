@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAirtableLink } from '../airtableLink';
 import env from './env';
 import { Installation } from './tables';
 
@@ -26,8 +27,8 @@ export const slackAlert = async (message: string): Promise<void> => {
   });
 };
 
-export const getParticipantAirtableLink = (installation: Installation, recordId: string) => {
-  return getAirtableLink({
+export const getSlackParticipantAirtableLink = (installation: Installation, recordId: string) => {
+  return getSlackAirtableLink({
     baseId: installation.participantsBaseId,
     tableId: installation.participantsTableId,
     viewId: installation.participantsViewId ?? undefined,
@@ -35,8 +36,10 @@ export const getParticipantAirtableLink = (installation: Installation, recordId:
   });
 };
 
-export const getAirtableLink = ({
+export const getSlackAirtableLink = ({
   baseId, tableId, viewId, recordId,
 }: { baseId: string, tableId: string, recordId: string, viewId?: string }) => {
-  return `<https://airtable.com/${baseId}/${tableId}${viewId ? `/${viewId}` : ''}/${recordId}|View record in Airtable>`;
+  return `<${getAirtableLink({
+    baseId, tableId, viewId, recordId,
+  })}|View record in Airtable>`;
 };

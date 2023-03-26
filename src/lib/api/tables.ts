@@ -139,6 +139,7 @@ export interface Meeting extends Item {
   'createdAt': number,
   'lastModifiedAt': number,
   'state': 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'DECLINED',
+  'participantLinks': string,
 }
 
 export const meetingsTable: Table<Meeting> = {
@@ -152,6 +153,7 @@ export const meetingsTable: Table<Meeting> = {
     createdAt: 'number',
     lastModifiedAt: 'number',
     state: 'string',
+    participantLinks: 'string',
   },
 };
 
@@ -160,6 +162,7 @@ export interface MeetingFeedback extends Item {
   'meetingId': string,
   'value': number,
   'createdAt': number,
+  'participantLinks': string,
 }
 
 export const meetingFeedbacksTable: Table<MeetingFeedback> = {
@@ -171,6 +174,7 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
     meetingId: 'string',
     value: 'number',
     createdAt: 'number',
+    participantLinks: 'string',
   },
 };
 

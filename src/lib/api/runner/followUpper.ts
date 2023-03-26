@@ -1,5 +1,5 @@
 import { WebClient } from '@slack/web-api';
-import { getAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
+import { getSlackAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
 import { update } from '../db';
 import { makeMessage } from '../slack';
 import {
@@ -36,7 +36,7 @@ export const followUpper = async (
     const participantsInMeeting = participants.filter((p) => participantIds.includes(p.id));
 
     if (participantIds.length !== participantsInMeeting.length) {
-      slackAlert(`Warning: Installation ${installation.name} failed to follow up meeting ${meeting.id} because we couldn't find the participants in Airtable or Slack. ${getAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`);
+      slackAlert(`Warning: Installation ${installation.name} failed to follow up meeting ${meeting.id} because we couldn't find the participants in Airtable or Slack. ${getSlackAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`);
       return;
     }
 
@@ -46,7 +46,7 @@ export const followUpper = async (
 
     const channelId = res.channel?.id;
     if (!channelId) {
-      slackAlert(`Error: Failed to open mpim with ${participantsInMeeting.map((p) => p.slackId)} in installation ${installation.id}. ${getAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`);
+      slackAlert(`Error: Failed to open mpim with ${participantsInMeeting.map((p) => p.slackId)} in installation ${installation.id}. ${getSlackAirtableLink({ baseId: meetingsTable.baseId, tableId: meetingsTable.tableId, recordId: meeting.id })}.`);
       return;
     }
 

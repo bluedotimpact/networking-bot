@@ -98,15 +98,21 @@ export const acknowledgeSlackButton: Middleware<SlackActionMiddlewareArgs<BlockA
   await args.ack();
 };
 
-export const findSlackId = (
+export const getSlackData = (
   participant: Participant,
   members: NonNullable<UsersListResponse['members']>,
-): string => {
-  const slackId = members.find((m) => {
+): { slackId: string, slackName: string | undefined } => {
+  const member = members.find((m) => {
     return m.is_email_confirmed && m.profile?.email === participant.slackEmail;
-  })?.id;
-  if (slackId === undefined) {
+  });
+  if (member === undefined) {
     throw new Error(`Failed to find Slack member for participant ${participant.id}`);
   }
-  return slackId;
+  if (member.id === undefined) {
+    throw new Error(`No Slack ID for Slack member for participant ${participant.id}`);
+  }
+  return {
+    slackId: member.id,
+    slackName: member.real_name ?? member.name,
+  };
 };

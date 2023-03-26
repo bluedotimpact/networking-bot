@@ -1,5 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import { slackAlert } from 'src/lib/api/slackAlert';
+import { getParticipantAirtableLink } from 'src/lib/airtableLink';
 import { insert } from '../db';
 import { ACTION_IDS, makeMessage } from '../slack';
 import {
@@ -10,7 +11,7 @@ import { now } from '../../timestamp';
 export const matcher = async (
   slack: WebClient,
   installation: Installation,
-  participants: (Participant & { slackId: string })[],
+  participants: (Participant & { slackId: string, slackName: string | undefined })[],
   // We think we are likely to use this in future matching logic
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   meetings: Meeting[],
@@ -35,6 +36,7 @@ export const matcher = async (
       participantIdsJson: JSON.stringify(match.map((p) => p.id)),
       slackMpim: channelId,
       state: 'PENDING',
+      participantLinks: `${match.map((p) => `[${p.slackName ?? p.slackEmail}](${getParticipantAirtableLink(installation, p.id)})`).join(', ')}`,
     });
 
     // TODO: flesh this out with better text.

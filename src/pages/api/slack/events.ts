@@ -1,9 +1,10 @@
 import { BlockAction, ButtonAction } from '@slack/bolt';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getParticipantAirtableLink } from 'src/lib/airtableLink';
 import { apiRoute } from '../../../lib/api/apiRoute';
 import { get, insert, update } from '../../../lib/api/db';
 import {
-  acknowledgeSlackButton, ACTION_IDS, findSlackId, makeMessage,
+  acknowledgeSlackButton, ACTION_IDS, getSlackData, makeMessage,
 } from '../../../lib/api/slack';
 import {
   installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor,
@@ -75,7 +76,7 @@ app.action<BlockAction<ButtonAction>>(
       const participant = await get(participantsTable, participantId);
       return {
         ...participant,
-        slackId: findSlackId(participant, members),
+        ...getSlackData(participant, members),
       };
     }));
 
@@ -125,11 +126,15 @@ app.action<BlockAction<ButtonAction>>(
   async (args) => {
     const [meetingId, participantId, rating]: [string, string, number] = JSON.parse(args.action.value);
 
+    const meeting = await get(meetingsTable, meetingId);
+    const installation = await get(installationsTable, meeting.installationId);
+
     await insert(meetingFeedbacksTable, {
       meetingId,
       participantId,
       createdAt: now(),
       value: rating,
+      participantLinks: `[${args.body.user.name}](${getParticipantAirtableLink(installation, participantId)})`,
     });
 
     const text = 'Thanks for your feedback!';

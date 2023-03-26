@@ -17,7 +17,7 @@ const Button: React.FC<Props> = ({
     href={href}
     target={target}
     onClick={onClick}
-    className={classNames('py-2 px-4 rounded text-white inline-block h-full transition-all duration-200 bg-blue-400 hover:brightness-95 focus:brightness-95 focus:ring-4 ring-blue-100 outline-none', className)}
+    className={classNames('py-2 px-4 rounded text-white inline-block h-full transition-all duration-200 bg-blue-400 hover:brightness-95 focus:brightness-95 focus:ring-4 ring-blue-200 outline-none', className)}
     disabled={disabled}
     role="button"
     {...other}
