@@ -5,7 +5,7 @@ import { handleInstallation } from 'src/lib/api/runner/core';
 import { scan } from '../../../lib/api/db';
 import {
   installationsTable, meetingsTable,
-} from '../../../lib/api/tables';
+} from '../../../lib/api/db/tables';
 import env from '../../../lib/api/env';
 import { apiRoute } from '../../../lib/api/apiRoute';
 

@@ -8,7 +8,7 @@ import {
 } from '../../../lib/api/slack';
 import {
   installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor,
-} from '../../../lib/api/tables';
+} from '../../../lib/api/db/tables';
 import { now } from '../../../lib/timestamp';
 import { app, appRunner } from './_runner';
 

@@ -4,7 +4,7 @@ import { handleInstallation } from 'src/lib/api/runner/core';
 import { get, scan } from '../../../lib/api/db';
 import {
   installationsTable, meetingsTable,
-} from '../../../lib/api/tables';
+} from '../../../lib/api/db/tables';
 import { apiRoute } from '../../../lib/api/apiRoute';
 
 export type RunRequest = {

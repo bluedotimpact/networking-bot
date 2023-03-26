@@ -4,7 +4,7 @@ import { update } from '../db';
 import { makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
-} from '../tables';
+} from '../db/tables';
 import { now } from '../../timestamp';
 
 const shouldFollowUp = (meeting: Meeting) => {
