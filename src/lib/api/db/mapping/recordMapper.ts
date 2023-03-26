@@ -54,7 +54,7 @@ export const mapRecordTypeAirtableToTs = <T extends { [fieldName: string]: TsTyp
  * Airtable table. It will do this using the field mappers on each field, based
  * on the tsTypes and Airtable table schema.
  * It does NOT change any property names.
- * 
+ *
  * @param tsTypes TypeScript types for the record (necessary to handle nullables).
  * @example { a: "string", b: "number", c: "boolean", d: "string" }
  *
@@ -63,7 +63,7 @@ export const mapRecordTypeAirtableToTs = <T extends { [fieldName: string]: TsTyp
  *
  * @param airtableTable An Airtable table.
  * @example { fields: { a: "singleLineText", b: "number", c: "checkbox", d: "multipleRecordLinks" }, ... }
- * 
+ *
  * @returns An Airtable FieldSet. Throws if cannot coerce to requested type.
  * @example { a: "Some text", b: 123, d: ["rec123"] } // (c is an un-ticked checkbox, d is a multipleRecordLinks)
  */

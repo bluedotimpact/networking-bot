@@ -41,8 +41,8 @@ export type FromAirtableTypeString<T> =
                   T extends 'percent' ? number | null :
                     T extends 'currency' ? number | null :
                       T extends 'rating' ? number | null :
-                          T extends 'duration' ? number | null :
-                            T extends 'count' ? number | null :
-                              T extends 'autoNumber' ? number | null :
-                                T extends 'multipleRecordLinks' ? string[] | null :
-                                  never;
+                        T extends 'duration' ? number | null :
+                          T extends 'count' ? number | null :
+                            T extends 'autoNumber' ? number | null :
+                              T extends 'multipleRecordLinks' ? string[] | null :
+                                never;

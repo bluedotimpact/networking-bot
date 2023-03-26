@@ -73,14 +73,14 @@ export function assertMatchesSchema<T extends Item>(
 
 /**
  * Constructs a TypeScript object type definition given a table definition
- * 
+ *
  * @param table Table definition
- * @example { 
+ * @example {
  *            schema: { someProp: "string", otherProps: "number[]", another: "boolean" },
  *            mappings: { someProp: "Some_Airtable_Field", otherProps: ["Field1", "Field2"] },
  *            ...
  *          }
- * 
+ *
  * @returns The TypeScript object type we expect the Airtable record to coerce to
  * @example {
  *            Some_Airtable_Field: "string",
@@ -90,7 +90,7 @@ export function assertMatchesSchema<T extends Item>(
  *          }
  */
 const airtableFieldNameTsTypes = <T extends Item>(table: Table<T>): Record<string, TsTypeString> => {
-  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'>, TsTypeString][]
+  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'>, TsTypeString][];
 
   return Object.fromEntries(
     schemaEntries.map(([outputFieldName, tsType]) => {
@@ -104,12 +104,12 @@ const airtableFieldNameTsTypes = <T extends Item>(table: Table<T>): Record<strin
       }
 
       return [[mappingToAirtable, tsType]];
-    }).flat(1)
+    }).flat(1),
   );
 };
 
 const mapRecordFieldNamesAirtableToTs = <T extends Item>(table: Table<T>, tsRecord: Record<string, FromTsTypeString<TsTypeString>>): T => {
-  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'> & string, TsTypeString][]
+  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'> & string, TsTypeString][];
 
   const item = Object.fromEntries(
     schemaEntries.map(([outputFieldName]) => {
@@ -123,37 +123,37 @@ const mapRecordFieldNamesAirtableToTs = <T extends Item>(table: Table<T>, tsReco
       }
 
       return [outputFieldName, tsRecord[mappingToAirtable as string]];
-    })
+    }),
   );
 
   return Object.assign(item, { id: tsRecord.id });
-}
+};
 
 const mapRecordFromAirtable = <T extends Item>(table: Table<T>, record: AirtableRecord) => {
   const tsTypes = airtableFieldNameTsTypes(table);
   const tsRecord = mapRecordTypeAirtableToTs(tsTypes, record);
-  const mappedRecord = mapRecordFieldNamesAirtableToTs(table, tsRecord)
+  const mappedRecord = mapRecordFieldNamesAirtableToTs(table, tsRecord);
   return mappedRecord;
 };
 
 /**
  * Maps a TS object (matching table.schema) to another TS object (matching table.mappings),
  * mapping columns based on the table definition.
- * 
+ *
  * @param table Table definition
- * @example { 
+ * @example {
  *            schema: { someProp: "string", otherProps: "number[]", another: "boolean" },
  *            mappings: { someProp: "Some_Airtable_Field", otherProps: ["Field1", "Field2"] },
  *            ...
  *          }
- * 
+ *
  * @param item The TS object to map
  * @example {
  *            someProp: "abcd",
  *            otherProps: [314, 159],
  *            another: true
  *          }
- * 
+ *
  * @returns The TS object mapped via the table.mappings
  * @example {
  *            Some_Airtable_Field: "abcd",
@@ -163,7 +163,7 @@ const mapRecordFromAirtable = <T extends Item>(table: Table<T>, record: Airtable
  *          }
  */
 const mapRecordFieldNamesTsToAirtable = <T extends Item>(table: Table<T>, item: Partial<T>): Record<string, FromTsTypeString<TsTypeString>> => {
-  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'> & string, TsTypeString][]
+  const schemaEntries = Object.entries(table.schema) as [keyof Omit<T, 'id'> & string, TsTypeString][];
 
   const tsRecord = Object.fromEntries(
     schemaEntries.map(([outputFieldName]) => {
@@ -181,29 +181,28 @@ const mapRecordFieldNamesTsToAirtable = <T extends Item>(table: Table<T>, item: 
         }
 
         if (!Array.isArray(value)) {
-          throw new Error(`Got non-array type ${typeof value} for ${table.name}.${outputFieldName}, but expected ${table.schema[outputFieldName]}.`)
-        } 
-        
-        if (value.length !== mappingToAirtable.length) {
-          throw new Error(`Got ${value.length} values for ${table.name}.${outputFieldName}, but ${mappingToAirtable.length} mappings. Expected these to be the same.`)
+          throw new Error(`Got non-array type ${typeof value} for ${table.name}.${outputFieldName}, but expected ${table.schema[outputFieldName]}.`);
         }
-        
+
+        if (value.length !== mappingToAirtable.length) {
+          throw new Error(`Got ${value.length} values for ${table.name}.${outputFieldName}, but ${mappingToAirtable.length} mappings. Expected these to be the same.`);
+        }
+
         return mappingToAirtable.map((airtableFieldName, index) => [airtableFieldName, value[index]]);
       }
 
       return [[mappingToAirtable, value]];
-    }).flat(1)
+    }).flat(1),
   );
 
   return Object.assign(item, { id: tsRecord.id });
-}
+};
 
 const mapRecordToAirtable = <T extends Item>(table: Table<T>, item: Partial<T>, airtableTable: AirtableTable): FieldSet => {
-  const mappedItem = mapRecordFieldNamesTsToAirtable(table, item)
+  const mappedItem = mapRecordFieldNamesTsToAirtable(table, item);
   const tsTypes = airtableFieldNameTsTypes(table);
   const fieldSet = mapRecordTypeTsToAirtable(tsTypes, mappedItem, airtableTable);
   return fieldSet;
-
 
   // const record = {} as FieldSet;
 
@@ -258,7 +257,7 @@ const arrayToSingleType = (tsType: TsTypeString): TsTypeString => {
 export const get = async <T extends Item>(table: Table<T>, id: string): Promise<T> => {
   const airtableTable = await getAirtableTable(table);
 
-  const record = await airtableTable.find(id) as AirtableRecord
+  const record = await airtableTable.find(id) as AirtableRecord;
   if (!record) {
     throw new Error(`Failed to find record in ${table.name} with key ${id}`);
   }
@@ -270,7 +269,7 @@ export type ScanParams = Omit<QueryParams<unknown>, 'fields' | 'cellFormat' | 'm
 
 export const scan = async <T extends Item>(table: Table<T>, params?: ScanParams): Promise<T[]> => {
   const airtableTable = await getAirtableTable(table);
-  const records = await airtableTable.select(params).all() as AirtableRecord[]
+  const records = await airtableTable.select(params).all() as AirtableRecord[];
 
   return records.map((record) => mapRecordFromAirtable(table, record));
 };
@@ -291,7 +290,7 @@ export const update = async <T extends Item>(table: Table<T>, data: Partial<T> &
 };
 
 export const remove = async <T extends Item>(table: Table<T>, id: string): Promise<T> => {
-  const airtableTable = await getAirtableTable(table)
+  const airtableTable = await getAirtableTable(table);
   const record = await airtableTable.destroy(id) as AirtableRecord;
   return mapRecordFromAirtable(table, record);
 };
