@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { now } from '../timestamp';
 
 // TODO: handle automatically logging out when the token expires?
 
@@ -15,7 +16,7 @@ const getAuthFromLocalStorage = (): AuthState | undefined => {
       const parsed = JSON.parse(value);
       if (typeof parsed.token !== 'string') return undefined;
       if (typeof parsed.expiresAt !== 'number') return undefined;
-      if (parsed.expiresAt < (new Date().getTime() / 1000)) return undefined;
+      if (parsed.expiresAt < now()) return undefined;
       return {
         token: parsed.token,
         expiresAt: parsed.expiresAt,

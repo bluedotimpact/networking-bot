@@ -5,7 +5,7 @@ import { insert } from '../db';
 import { ACTION_IDS, makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
-} from '../tables';
+} from '../db/tables';
 import { now } from '../../timestamp';
 
 export const matcher = async (

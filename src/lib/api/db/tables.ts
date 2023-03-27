@@ -1,78 +1,12 @@
-import env from './env';
-
-export type BaseTypeStrings = NonNullToString<any> | ToString<any>;
-
-type NonNullToString<T> =
-  T extends string ? 'string' :
-    T extends number ? 'number' :
-      T extends boolean ? 'boolean' :
-        T extends number[] ? 'number[]' :
-          T extends string[] ? 'string[]' :
-            T extends boolean[] ? 'boolean[]' :
-              never;
-
-export type ToString<T> =
-  null extends T ? `${NonNullToString<T>} | null` : NonNullToString<T>;
-
-export type FromString<T> =
-  T extends 'string' ? string :
-    T extends 'string | null' ? string | null :
-      T extends 'number' ? number :
-        T extends 'number | null' ? number | null :
-          T extends 'boolean' ? boolean :
-            T extends 'boolean | null' ? boolean | null :
-              T extends 'number[]' ? number[] :
-                T extends 'number[] | null' ? number[] | null :
-                  T extends 'string[]' ? string[] :
-                    T extends 'string[] | null' ? string[] | null :
-                      T extends 'boolean[]' ? boolean[] :
-                        T extends 'boolean[] | null' ? boolean[] | null :
-                          never;
-
-export interface TypeDef {
-  single: 'string' | 'number' | 'boolean',
-  array: boolean,
-  nullable: boolean,
-}
-
-export const parseType = (t: BaseTypeStrings): TypeDef => {
-  if (t.endsWith('[] | null')) {
-    return {
-      single: t.slice(0, -('[] | null'.length)) as TypeDef['single'],
-      array: true,
-      nullable: true,
-    };
-  }
-
-  if (t.endsWith('[]')) {
-    return {
-      single: t.slice(0, -('[]'.length)) as TypeDef['single'],
-      array: true,
-      nullable: false,
-    };
-  }
-
-  if (t.endsWith(' | null')) {
-    return {
-      single: t.slice(0, -(' | null'.length)) as TypeDef['single'],
-      array: false,
-      nullable: true,
-    };
-  }
-
-  return {
-    single: t as TypeDef['single'],
-    array: false,
-    nullable: false,
-  };
-};
+import env from '../env';
+import { ToTsTypeString } from './mapping/types';
 
 // Value for possible field mapping
 // For arrays, this may be:
 // - an array of field names (each holding a single value of the array type); or
 // - one field name (holding an array of values of the correct type)
 // Otherwise this must be a single field name
-export type MappingValue<T> = T extends any[] ? string | string[] : string;
+export type MappingValue<T> = T extends unknown[] ? string | string[] : string;
 
 export interface Item {
   id: string
@@ -82,7 +16,7 @@ export interface Table<T extends Item> {
   name: string,
   baseId: string,
   tableId: string,
-  schema: { [k in keyof Omit<T, 'id'>]: ToString<T[k]> },
+  schema: { [k in keyof Omit<T, 'id'>]: ToTsTypeString<T[k]> },
   mappings?: { [k in keyof Omit<T, 'id'>]: MappingValue<T[k]> }
 }
 
@@ -96,7 +30,7 @@ export const participantsTableFor = (installation: Installation): Table<Particip
   },
   mappings: {
     slackEmail: installation.participantsSlackEmailFieldName,
-    dimensions: JSON.parse(installation.participantsDimensionFieldNamesJson),
+    dimensions: JSON.parse(installation.participantsDimensionFieldNamesJson) as string[],
   },
 });
 
@@ -113,6 +47,7 @@ export interface Installation extends Item {
   'participantsTableId': string,
   'participantsViewId': string | null,
   'participantsSlackEmailFieldName': string,
+  /** @example `["mlSkill", "careerLevel"]` */
   'participantsDimensionFieldNamesJson': string,
 }
 
@@ -177,5 +112,3 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
     participantLinks: 'string',
   },
 };
-
-// TODO: scheduler run result table?

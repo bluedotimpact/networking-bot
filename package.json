@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "start": "next dev",
-    "lint": "next lint",
+    "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
     "deploy:prod": "VERCEL_PROJECT_ID=prj_OMSHY9c0ikY9jOyAvTD3FlP5FF9z VERCEL_ORG_ID=QbqUU7VQwMWpjbDCLDlR6ArA npm run _deploy:vercel",
