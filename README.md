@@ -37,11 +37,11 @@ Complete:
 - Send follow-ups if no response
 - Deploy to Vercel
 - Handle multiple installations on the same Slack workspace
+- Trigger run for a single installation
 
 Todo:
 - nice to have: smarter matcher logic
 - nice to have: time availabilities
-- nice to have: trigger run for a single installation
 
 https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 

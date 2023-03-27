@@ -1,43 +1,5 @@
 import env from '../env';
-import { ToTsTypeString, TsTypeString } from './mapping/types';
-
-export interface TypeDef {
-  single: 'string' | 'number' | 'boolean',
-  array: boolean,
-  nullable: boolean,
-}
-
-export const parseType = (t: TsTypeString): TypeDef => {
-  if (t.endsWith('[] | null')) {
-    return {
-      single: t.slice(0, -('[] | null'.length)) as TypeDef['single'],
-      array: true,
-      nullable: true,
-    };
-  }
-
-  if (t.endsWith('[]')) {
-    return {
-      single: t.slice(0, -('[]'.length)) as TypeDef['single'],
-      array: true,
-      nullable: false,
-    };
-  }
-
-  if (t.endsWith(' | null')) {
-    return {
-      single: t.slice(0, -(' | null'.length)) as TypeDef['single'],
-      array: false,
-      nullable: true,
-    };
-  }
-
-  return {
-    single: t as TypeDef['single'],
-    array: false,
-    nullable: false,
-  };
-};
+import { ToTsTypeString } from './mapping/types';
 
 // Value for possible field mapping
 // For arrays, this may be:
