@@ -58,7 +58,7 @@ https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d951
 
 So that OAuth and event callbacks to hit the right place, use localhost.run:
 
-1. Run `ssh -R 80:localhost:8080 nokey@localhost.run`
+1. Run `ssh -R 80:localhost:3000 nokey@localhost.run`
 2. In the Slack console for '(local) networking bot':
   - in [OAuth settings](https://api.slack.com/apps/A04PEDW8K3R/oauth), update the redirect URL to your lhr.life endpoint
   - in [Interactivity & Shortcuts](https://api.slack.com/apps/A04PEDW8K3R/interactive-messages) update the request URL to your lhr.life endpoint
