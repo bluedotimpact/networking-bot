@@ -36,6 +36,27 @@ describe('string', () => {
 
     expect(mapperPair.toAirtable('rec789')).toEqual(['rec789']);
   });
+
+  test('dateTime', () => {
+    const mapperPair = fieldMappers.string?.dateTime;
+    if (!mapperPair) {
+      throw new Error('Expected mapper pair for [string, dateTime]');
+    }
+    const validDateTimeString = '2023-04-09T12:34:56.789Z';
+    const validDateTimeStringAlt1 = 'Sun Apr 09 2023 13:34:56.789 GMT+0100 (British Summer Time)';
+    const validDateTimeStringAlt2 = '2023-04-09T13:34:56.789+0100';
+    const invalidDateTimeString = 'invalid date time string';
+
+    expect(mapperPair.fromAirtable(validDateTimeString)).toBe(validDateTimeString);
+    expect(() => mapperPair.fromAirtable(invalidDateTimeString)).toThrow();
+    expect(() => mapperPair.fromAirtable(null)).toThrow();
+    expect(() => mapperPair.fromAirtable(undefined)).toThrow();
+
+    expect(mapperPair.toAirtable(validDateTimeString)).toBe(validDateTimeString);
+    expect(mapperPair.toAirtable(validDateTimeStringAlt1)).toBe(validDateTimeString);
+    expect(mapperPair.toAirtable(validDateTimeStringAlt2)).toBe(validDateTimeString);
+    expect(() => mapperPair.toAirtable(invalidDateTimeString)).toThrow();
+  });
 });
 
 describe('string | null', () => {
@@ -128,6 +149,23 @@ describe('number', () => {
     expect(() => mapperPair.fromAirtable(undefined)).toThrow('required');
 
     expect(() => mapperPair.toAirtable(123)).toThrow('readonly');
+  });
+
+  test('dateTime', () => {
+    const mapperPair = fieldMappers.number?.dateTime;
+    if (!mapperPair) {
+      throw new Error('Expected mapper pair for [number, dateTime]');
+    }
+    const validDateTimeString = '2023-04-09T12:34:56.000Z';
+    const validUnixTime = 1681043696;
+    const invalidDateTimeString = 'invalid unix time';
+
+    expect(mapperPair.fromAirtable(validDateTimeString)).toBe(validUnixTime);
+    expect(() => mapperPair.fromAirtable(invalidDateTimeString)).toThrow();
+    expect(() => mapperPair.fromAirtable(null)).toThrow();
+    expect(() => mapperPair.fromAirtable(undefined)).toThrow();
+
+    expect(mapperPair.toAirtable(1681043696)).toBe(validDateTimeString);
   });
 });
 
