@@ -13,7 +13,11 @@ import { RunResponse } from './api/scheduler/run';
 import { RunRequest } from './api/user/run';
 
 const Run: React.FC = withAuth(({ authState }) => {
-  const [{ data, loading, error }] = useAxios<Installation[]>({
+  const [{ data, loading, error }] = useAxios<{
+    installations: Installation[],
+    baseId: string,
+    tableId: string,
+  }>({
     url: '/api/user/installations',
     headers: { authorization: `Bearer ${authState.token}` },
   });
@@ -26,7 +30,7 @@ const Run: React.FC = withAuth(({ authState }) => {
       {loading && <p>Loading...</p>}
       {data && (
       <div>
-        {data.map((installation) => <InstallationRow installation={installation} authState={authState} />)}
+        {data.installations.map((installation) => <InstallationRow installation={installation} baseId={data.baseId} tableId={data.tableId} authState={authState} />)}
       </div>
       )}
     </Page>
@@ -37,10 +41,14 @@ export default Run;
 
 interface InstallationRowProps {
   installation: Installation
+  baseId: string
+  tableId: string
   authState: AuthState
 }
 
-const InstallationRow: React.FC<InstallationRowProps> = ({ installation, authState }) => {
+const InstallationRow: React.FC<InstallationRowProps> = ({
+  installation, baseId, tableId, authState,
+}) => {
   const [runState, setRunState] = useState<
   | { type: 'loading' }
   | { type: 'success' }
@@ -53,7 +61,11 @@ const InstallationRow: React.FC<InstallationRowProps> = ({ installation, authSta
       <p className="flex-1">
         {installation.name}
         {' '}
-        (<Link href={`https://app.slack.com/client/${installation.slackTeamId}`} className="text-blue-500 hover:text-blue-400 underline">Open in Slack</Link>)
+        (
+        <Link href={`https://app.slack.com/client/${installation.slackTeamId}`} className="text-blue-500 hover:text-blue-400 underline">Slack</Link>
+        ,{' '}
+        <Link href={`https://airtable.com/${baseId}/${tableId}/${installation.id}`} className="text-blue-500 hover:text-blue-400 underline">Airtable</Link>
+        )
       </p>
       {runState?.type === 'success' && <p>Last run: Success</p>}
       {runState?.type === 'failure' && <p>Last run: Failure: {runState.message}</p>}

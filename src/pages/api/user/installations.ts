@@ -10,9 +10,17 @@ export type LoginResponse = {
 
 export default apiRoute(async (
   req: NextApiRequest,
-  res: NextApiResponse<Installation[]>,
+  res: NextApiResponse<{
+    installations: Installation[],
+    baseId: string,
+    tableId: string,
+  }>,
 ) => {
   const installations = await scan(installationsTable);
 
-  res.status(200).json(installations);
+  res.status(200).json({
+    installations,
+    baseId: installationsTable.baseId,
+    tableId: installationsTable.tableId,
+  });
 });
