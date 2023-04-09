@@ -49,6 +49,7 @@ export interface Installation extends Item {
   'participantsSlackEmailFieldName': string,
   /** @example `["mlSkill", "careerLevel"]` */
   'participantsDimensionFieldNamesJson': string,
+  'introMessage': string,
 }
 
 export const installationsTable: Table<Installation> = {
@@ -64,6 +65,7 @@ export const installationsTable: Table<Installation> = {
     participantsViewId: 'string | null',
     participantsSlackEmailFieldName: 'string',
     participantsDimensionFieldNamesJson: 'string',
+    introMessage: 'string',
   },
 };
 

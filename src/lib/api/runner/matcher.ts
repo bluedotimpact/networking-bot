@@ -40,7 +40,7 @@ export const matcher = async (
     });
 
     // TODO: flesh this out with better text.
-    const text = `It's a match! <@${match[0].slackId}>, arrange a time to have a chat with ${match.slice(1).map((p) => `<@${p.slackId}>`).join(' and ')}.\n\nSome topics you might want to get your conversation started with are:\n • What brought to to BlueDot Impact's programme?\n • Which resources were most interesting to you this week, and why?\n • What things outside of the programme are you up to?`;
+    const text = `Hey ${match.length === 2 ? 'both' : 'all'}, you've been selected to meet each other! <@${match[0].slackId}>, arrange a time to have a chat with ${match.slice(1).map((p) => `<@${p.slackId}>`).join(' and ')}.\n\n${installation.introMessage}`;
     await slack.chat.postMessage({
       channel: channelId,
       text,
