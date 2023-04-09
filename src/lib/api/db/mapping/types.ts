@@ -30,25 +30,31 @@ export type FromTsTypeString<T> =
                         T extends 'boolean[] | null' ? boolean[] | null :
                           never;
 
-export type AirtableTypeString = 'singleLineText' | 'email' | 'url' | 'multilineText' | 'phoneNumber' | 'checkbox' | 'number' | 'percent' | 'currency' | 'count' | 'autoNumber' | 'rating' | 'richText' | 'duration' | 'multipleRecordLinks';
+export type AirtableTypeString = 'singleLineText' | 'email' | 'url' | 'multilineText' | 'phoneNumber' | 'checkbox' | 'number' | 'percent' | 'currency' | 'count' | 'autoNumber' | 'rating' | 'richText' | 'duration' | 'multipleRecordLinks' | 'dateTime';
 
+// Should map an AirtableTypeString to its cell format, as per
+// https://airtable.com/developers/web/api/field-model
 export type FromAirtableTypeString<T> =
-  T extends 'singleLineText' ? string | null :
-    T extends 'email' ? string | null :
-      T extends 'url' ? string | null :
-        T extends 'multilineText' ? string | null :
-          T extends 'richText' ? string | null :
-            T extends 'phoneNumber' ? string | null :
-              T extends 'checkbox' ? boolean | null :
-                T extends 'number' ? number | null :
-                  T extends 'percent' ? number | null :
-                    T extends 'currency' ? number | null :
-                      T extends 'rating' ? number | null :
-                        T extends 'duration' ? number | null :
-                          T extends 'count' ? number | null :
-                            T extends 'autoNumber' ? number | null :
-                              T extends 'multipleRecordLinks' ? string[] | null :
-                                never;
+  // All Airtable types are actually nullable
+  | null
+  | (
+    T extends 'singleLineText' ? string :
+      T extends 'email' ? string :
+        T extends 'url' ? string :
+          T extends 'multilineText' ? string :
+            T extends 'richText' ? string :
+              T extends 'phoneNumber' ? string :
+                T extends 'checkbox' ? boolean :
+                  T extends 'number' ? number :
+                    T extends 'percent' ? number :
+                      T extends 'currency' ? number :
+                        T extends 'rating' ? number :
+                          T extends 'duration' ? number :
+                            T extends 'count' ? number :
+                              T extends 'autoNumber' ? number :
+                                T extends 'multipleRecordLinks' ? string[] :
+                                  T extends 'dateTime' ? string :
+                                    never);
 
 interface TypeDef {
   single: 'string' | 'number' | 'boolean',

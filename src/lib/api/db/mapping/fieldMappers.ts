@@ -50,6 +50,22 @@ export const fieldMappers: Mapper = {
         return value[0];
       },
     },
+    dateTime: {
+      toAirtable: (value) => {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime string');
+        }
+        return date.toJSON();
+      },
+      fromAirtable: (value) => {
+        const date = new Date(value ?? '');
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime string');
+        }
+        return date.toJSON();
+      },
+    },
   },
   'string | null': {
     singleLineText: fallbackMapperPair(null, null),
@@ -72,6 +88,24 @@ export const fieldMappers: Mapper = {
         return value[0];
       },
     },
+    dateTime: {
+      toAirtable: (value) => {
+        if (value === null) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return date.toJSON();
+      },
+      fromAirtable: (value) => {
+        if (value === null || value === undefined) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return date.toJSON();
+      },
+    },
   },
   boolean: {
     checkbox: fallbackMapperPair(false, false),
@@ -86,12 +120,29 @@ export const fieldMappers: Mapper = {
     rating: requiredMapperPair,
     duration: requiredMapperPair,
     count: {
-      fromAirtable: (value) => required(value),
       toAirtable: () => { throw new Error('count type field is readonly'); },
+      fromAirtable: (value) => required(value),
     },
     autoNumber: {
-      fromAirtable: (value) => required(value),
       toAirtable: () => { throw new Error('autoNumber type field is readonly'); },
+      fromAirtable: (value) => required(value),
+    },
+    // Number assumed to be unix time in seconds
+    dateTime: {
+      toAirtable: (value) => {
+        const date = new Date(value * 1000);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return date.toJSON();
+      },
+      fromAirtable: (value) => {
+        const date = new Date(value ?? '');
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return Math.floor(date.getTime() / 1000);
+      },
     },
   },
   'number | null': {
@@ -107,6 +158,25 @@ export const fieldMappers: Mapper = {
     autoNumber: {
       fromAirtable: (value) => value ?? null,
       toAirtable: () => { throw new Error('autoNumber field is readonly'); },
+    },
+    // Number assumed to be unix time in seconds
+    dateTime: {
+      toAirtable: (value) => {
+        if (value === null) return null;
+        const date = new Date(value * 1000);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return date.toJSON();
+      },
+      fromAirtable: (value) => {
+        if (value === null || value === undefined) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          throw new Error('Invalid dateTime');
+        }
+        return Math.floor(date.getTime() / 1000);
+      },
     },
   },
   'string[]': {
