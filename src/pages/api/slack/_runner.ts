@@ -17,6 +17,8 @@ export const appRunner = new AppRunner({
         ? installation.enterprise!.id
         : installation.team!.id;
 
+      // Insert the defaults for new installations
+      // To edit these for a particular installation, do this in Airtable
       await insert(installationsTable, {
         name: installation.team?.name ?? installation.enterprise?.name ?? '',
         slackTeamId: teamId,
@@ -25,7 +27,12 @@ export const appRunner = new AppRunner({
         participantsTableId: '',
         participantsViewId: '',
         participantsSlackEmailFieldName: 'slackEmail',
+        participantsBiographyFieldName: 'bio',
         participantsDimensionFieldNamesJson: JSON.stringify([]),
+        introMessage: `As some starter conversation topics, consider:
+• What brought to to BlueDot Impact's programme?
+• Which resources were most interesting to you this week, and why?
+• What things outside of the programme are you up to?`,
       });
     },
     fetchInstallation: async (installQuery) => {
@@ -33,7 +40,6 @@ export const appRunner = new AppRunner({
         ? installQuery.enterpriseId!
         : installQuery.teamId!;
 
-      // const installations = await scan(installationsTable, `{slackTeamId} = '${teamId}'`)
       const installations = (await scan(installationsTable)).filter((i) => i.slackTeamId === teamId);
       if (installations.length === 0) {
         throw new Error(`Installation not found for team ${teamId}`);
