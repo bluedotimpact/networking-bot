@@ -38,7 +38,7 @@ app.action<BlockAction<ButtonAction>>(
       state: 'CONFIRMED',
     });
 
-    const text = 'Thanks for confirming your meeting, I hope it goes well! Keep me updated on how it goes.\n\nTip: Want to share what your takeaways from the conversation were? You can use this shared Slack conversation as a record of what you learnt from each other.';
+    const text = 'Thanks for confirming [TEST TEST] your meeting, I hope it goes well! Keep me updated on how it goes.\n\nTip: Want to share what your takeaways from the conversation were? You can use this shared Slack conversation as a record of what you learnt from each other.';
     await args.say({
       text,
       blocks: makeMessage(text, [
