@@ -1,4 +1,4 @@
-# networking-bot
+# networking-bot ![deployment automatic](https://img.shields.io/badge/deployment-automatic-success)
 
 A Slack app that pairs up participants for 1:1 conversations.
 
