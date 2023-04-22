@@ -9,6 +9,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <Head>
         <title>BlueBot control panel</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="version" content={process.env.VERSION} />
       </Head>
       <Component {...pageProps} />
     </>
