@@ -58,7 +58,7 @@ export interface Installation extends Item {
 
 export const installationsTable: Table<Installation> = {
   name: 'installation',
-  baseId: env.AIRTABLE_INSTALLATIONS_BASE_ID,
+  baseId: env.AIRTABLE_BASE_ID,
   tableId: env.AIRTABLE_INSTALLATIONS_TABLE_ID,
   schema: {
     name: 'string',
@@ -86,7 +86,7 @@ export interface Meeting extends Item {
 
 export const meetingsTable: Table<Meeting> = {
   name: 'meeting',
-  baseId: env.AIRTABLE_MEETINGS_BASE_ID,
+  baseId: env.AIRTABLE_BASE_ID,
   tableId: env.AIRTABLE_MEETINGS_TABLE_ID,
   schema: {
     slackMpim: 'string',
@@ -108,8 +108,8 @@ export interface MeetingFeedback extends Item {
 }
 
 export const meetingFeedbacksTable: Table<MeetingFeedback> = {
-  name: 'meeting',
-  baseId: env.AIRTABLE_MEETING_FEEDBACKS_BASE_ID,
+  name: 'meetingFeedback',
+  baseId: env.AIRTABLE_BASE_ID,
   tableId: env.AIRTABLE_MEETING_FEEDBACKS_TABLE_ID,
   schema: {
     participantId: 'string',
@@ -117,5 +117,20 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
     value: 'number',
     createdAt: 'number',
     participantLinks: 'string',
+  },
+};
+
+export interface GlobalSetting extends Item {
+  'name': string,
+  'value': string,
+}
+
+export const globalSettingsTable: Table<GlobalSetting> = {
+  name: 'globalSetting',
+  baseId: env.AIRTABLE_BASE_ID,
+  tableId: env.AIRTABLE_GLOBAL_SETTINGS_TABLE_ID,
+  schema: {
+    name: 'string',
+    value: 'string',
   },
 };

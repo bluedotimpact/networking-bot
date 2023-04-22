@@ -1,6 +1,7 @@
 import { BlockAction, ButtonAction } from '@slack/bolt';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getParticipantAirtableLink } from 'src/lib/airtableLink';
+import { getGlobalSettings } from 'src/lib/api/globalSettings';
 import { apiRoute } from '../../../lib/api/apiRoute';
 import { get, insert, update } from '../../../lib/api/db';
 import {
@@ -38,7 +39,7 @@ app.action<BlockAction<ButtonAction>>(
       state: 'CONFIRMED',
     });
 
-    const text = 'Thanks for confirming [TEST TEST] your meeting, I hope it goes well! Keep me updated on how it goes.\n\nTip: Want to share what your takeaways from the conversation were? You can use this shared Slack conversation as a record of what you learnt from each other.';
+    const text = (await getGlobalSettings()).confirmMeetingGroupMessage;
     await args.say({
       text,
       blocks: makeMessage(text, [
@@ -60,9 +61,8 @@ app.action<BlockAction<ButtonAction>>(
       state: 'COMPLETED',
     });
 
-    const groupText = 'Hope you had a good meeting!\n\nI\'ll be sending you a feedback survey individually in a second.';
-
-    await args.say({ text: groupText, blocks: makeMessage(groupText) });
+    const groupMessage = (await getGlobalSettings()).completeMeetingGroupMessage;
+    await args.say({ text: groupMessage, blocks: makeMessage(groupMessage) });
 
     const installation = await get(installationsTable, meeting.installationId);
     const participantsTable = participantsTableFor(installation);
@@ -80,13 +80,18 @@ app.action<BlockAction<ButtonAction>>(
       };
     }));
 
-    await Promise.all(participants.map((participant) => {
-      const individualText = `Your feedback is valuable for us to help match you up with great people, and improve the experience for future programmes. It is *not shared* with other participants.\n\nHow useful was matching you up with ${participants.filter((p) => p !== participant).map((p) => `<@${p.slackId}>`).join(' and ')}?`;
+    await Promise.all(participants.map(async (participant) => {
+      const individualMessage = (await getGlobalSettings())
+        .completeMeetingIndividualMessage
+        .replaceAll(
+          '{{otherParticipants}}',
+          participants.filter((p) => p !== participant).map((p) => `<@${p.slackId}>`).join(' and '),
+        );
 
       return args.client.chat.postMessage({
         channel: participant.slackId,
-        text: individualText,
-        blocks: makeMessage(individualText, [
+        text: individualMessage,
+        blocks: makeMessage(individualMessage, [
           { text: ':one: Not at all', id: ACTION_IDS.RATE_MEETING_BUTTON_1, value: JSON.stringify([meeting.id, participant.id, 1]) },
           { text: ':two: Slightly', id: ACTION_IDS.RATE_MEETING_BUTTON_2, value: JSON.stringify([meeting.id, participant.id, 2]) },
           { text: ':three: Moderately', id: ACTION_IDS.RATE_MEETING_BUTTON_3, value: JSON.stringify([meeting.id, participant.id, 3]) },
@@ -109,7 +114,7 @@ app.action<BlockAction<ButtonAction>>(
       state: 'DECLINED',
     });
 
-    const text = 'That\'s a shame, but thanks for letting me know.\n\nTip: Want to opt-out of this automated meeting matcher? Contact your programme organiser.';
+    const text = (await getGlobalSettings()).declineMeetingGroupMessage;
     await args.say({
       text,
       blocks: makeMessage(text, [
@@ -137,7 +142,7 @@ app.action<BlockAction<ButtonAction>>(
       participantLinks: `[${args.body.user.name}](${getParticipantAirtableLink(installation, participantId)})`,
     });
 
-    const text = 'Thanks for your feedback!';
+    const text = (await getGlobalSettings()).feedbackMeetingIndividualMessage;
     await args.say({ text, blocks: makeMessage(text) });
 
     await acknowledgeSlackButton(args);

@@ -6,6 +6,7 @@ import {
   Installation, Meeting, meetingsTable, Participant,
 } from '../db/tables';
 import { now } from '../../timestamp';
+import { getGlobalSettings } from '../globalSettings';
 
 const shouldFollowUp = (meeting: Meeting) => {
   // Already modified recently, no need for a reminder
@@ -50,7 +51,7 @@ export const followUpper = async (
       return;
     }
 
-    const text = 'Hey, I haven\'t heard any updates on how your meeting is going. So I can understand what\'s happening, can you click one of the buttons in the previous message?';
+    const text = (await getGlobalSettings()).chaseMeetingGroupMessage;
     await slack.chat.postMessage({
       channel: channelId,
       text,

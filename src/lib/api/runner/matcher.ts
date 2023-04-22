@@ -7,6 +7,7 @@ import {
   Installation, Meeting, meetingsTable, Participant,
 } from '../db/tables';
 import { now } from '../../timestamp';
+import { getGlobalSettings } from '../globalSettings';
 
 export const matcher = async (
   slack: WebClient,
@@ -40,7 +41,26 @@ export const matcher = async (
     });
 
     const biographies = match.filter((p) => p.biography);
-    const text = `Hey ${match.length === 2 ? 'both' : 'all'}, you've been selected to meet each other! <@${match[0].slackId}>, arrange a time to have a chat with ${match.slice(1).map((p) => `<@${p.slackId}>`).join(' and ')}.\n\n${installation.introMessage}${!biographies.length ? '' : `\n\nA bit about you:\n\n${biographies.map((b) => `<@${b.slackId}>: ${b.biography.replaceAll('\n', ' ')}`).join('\n\n')}`}`;
+    const text = (await getGlobalSettings())
+      .introMeetingGroupMessage
+      .replaceAll(
+        '{{organiser}}',
+        `<@${match[0].slackId}>`,
+      )
+      .replaceAll(
+        '{{participantsExcludingOrganiser}}',
+        `${match.slice(1).map((p) => `<@${p.slackId}>`).join(' and ')}`,
+      )
+      .replaceAll(
+        '{{installationIntroMessage}}',
+        installation.introMessage,
+      )
+      .replaceAll(
+        '{{biographies}}',
+        !biographies.length ? '' : `A bit about you:\n\n${biographies.map((b) => `<@${b.slackId}>: ${b.biography.replaceAll('\n', ' ')}`).join('\n\n')}`,
+      )
+      .trim();
+
     await slack.chat.postMessage({
       channel: channelId,
       text,
