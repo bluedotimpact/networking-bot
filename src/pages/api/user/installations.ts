@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { scan } from 'src/lib/api/db/common';
-import { Installation, installationsTable } from 'src/lib/api/db/tables';
+import { scan } from '../../../lib/api/db/common';
+import { Installation, installationsTable } from '../../../lib/api/db/tables';
 import { apiRoute } from '../../../lib/api/apiRoute';
 
 export type LoginResponse = {

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { timingSafeEqual } from 'node:crypto';
 import createHttpError from 'http-errors';
-import { handleInstallation } from 'src/lib/api/runner/core';
+import { handleInstallation } from '../../../lib/api/runner/core';
 import { scan } from '../../../lib/api/db/common';
 import {
   installationsTable, meetingsTable,

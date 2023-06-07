@@ -1,5 +1,5 @@
 import { WebClient } from '@slack/web-api';
-import { getSlackAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
+import { getSlackAirtableLink, slackAlert } from '../slackAlert';
 import { update } from '../db/common';
 import { makeMessage } from '../slack';
 import {

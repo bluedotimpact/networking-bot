@@ -1,11 +1,11 @@
 import {
   BookOpenIcon, CodeBracketIcon, PlayIcon, PlusIcon,
 } from '@heroicons/react/24/outline';
-import { ActionButton } from 'src/components/ActionButton';
-import Button from 'src/components/Button';
-import { Page } from 'src/components/Page';
-import { H1 } from 'src/components/Text';
-import { withAuth } from 'src/lib/client/withAuth';
+import { ActionButton } from '../components/ActionButton';
+import Button from '../components/Button';
+import { Page } from '../components/Page';
+import { H1 } from '../components/Text';
+import { withAuth } from '../lib/client/withAuth';
 
 const Home: React.FC = withAuth(({ setAuthState }) => {
   return (

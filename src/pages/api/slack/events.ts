@@ -1,7 +1,7 @@
 import { BlockAction, ButtonAction } from '@slack/bolt';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getParticipantAirtableLink } from 'src/lib/airtableLink';
-import { getGlobalSettings } from 'src/lib/api/globalSettings';
+import { getParticipantAirtableLink } from '../../../lib/airtableLink';
+import { getGlobalSettings } from '../../../lib/api/globalSettings';
 import { apiRoute } from '../../../lib/api/apiRoute';
 import { get, insert, update } from '../../../lib/api/db/common';
 import {

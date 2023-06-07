@@ -5,11 +5,11 @@ import axios from 'axios';
 import { UserManager, UserManagerSettings } from 'oidc-client';
 import { useState } from 'react';
 
-import { Page } from 'src/components/Page';
-import { H1 } from 'src/components/Text';
-import env from 'src/lib/client/env';
-import { useAuthState } from 'src/lib/client/authState';
-import { LoginResponse } from 'src/pages/api/user/login/google';
+import { Page } from './Page';
+import { H1 } from './Text';
+import env from '../lib/client/env';
+import { useAuthState } from '../lib/client/authState';
+import { LoginResponse } from '../pages/api/user/login/google';
 import Button from './Button';
 
 export const LoginPage: React.FC = () => {
