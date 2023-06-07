@@ -1,1 +1,1 @@
-export const now = (): number => Math.floor(new Date().getTime()) / 1000;
+export const now = (): number => Math.floor(Date.now()) / 1000;

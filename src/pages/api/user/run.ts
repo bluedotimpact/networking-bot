@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import createHttpError from 'http-errors';
 import { handleInstallation } from 'src/lib/api/runner/core';
-import { get, scan } from '../../../lib/api/db';
+import { get, scan } from '../../../lib/api/db/common';
 import {
   installationsTable, meetingsTable,
 } from '../../../lib/api/db/tables';

@@ -1,23 +1,10 @@
 import env from '../env';
-import { ToTsTypeString } from './mapping/types';
+import { Table, Item } from './common/mapping/types';
 
-// Value for possible field mapping
-// For arrays, this may be:
-// - an array of field names (each holding a single value of the array type); or
-// - one field name (holding an array of values of the correct type)
-// Otherwise this must be a single field name
-export type MappingValue<T> = T extends unknown[] ? string | string[] : string;
-
-export interface Item {
-  id: string
-}
-
-export interface Table<T extends Item> {
-  name: string,
-  baseId: string,
-  tableId: string,
-  schema: { [k in keyof Omit<T, 'id'>]: ToTsTypeString<T[k]> },
-  mappings?: { [k in keyof Omit<T, 'id'>]: MappingValue<T[k]> }
+export interface Participant extends Item {
+  'slackEmail': string,
+  'biography': string,
+  'dimensions': number[],
 }
 
 export const participantsTableFor = (installation: Installation): Table<Participant> => ({
@@ -35,12 +22,6 @@ export const participantsTableFor = (installation: Installation): Table<Particip
     dimensions: JSON.parse(installation.participantsDimensionFieldNamesJson) as string[],
   },
 });
-
-export interface Participant extends Item {
-  'slackEmail': string,
-  'biography': string,
-  'dimensions': number[],
-}
 
 export interface Installation extends Item {
   'name': string,

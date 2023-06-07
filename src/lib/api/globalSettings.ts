@@ -1,4 +1,4 @@
-import { scan } from './db';
+import { scan } from './db/common';
 import { globalSettingsTable } from './db/tables';
 
 const globalSettingKeys = [

@@ -1,5 +1,3 @@
-import type { Item, Table } from '../tables';
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TsTypeString = NonNullToString<any> | ToTsTypeString<any>;
 
@@ -182,3 +180,22 @@ export const airtableFieldNameTsTypes = <T extends Item>(table: Table<T>): Recor
     }).flat(1),
   );
 };
+
+// Value for possible field mapping
+// For arrays, this may be:
+// - an array of field names (each holding a single value of the array type); or
+// - one field name (holding an array of values of the correct type)
+// Otherwise this must be a single field name
+export type MappingValue<T> = T extends unknown[] ? string | string[] : string;
+
+export interface Item {
+  id: string
+}
+
+export interface Table<T extends Item> {
+  name: string,
+  baseId: string,
+  tableId: string,
+  schema: { [k in keyof Omit<T, 'id'>]: ToTsTypeString<T[k]> },
+  mappings?: { [k in keyof Omit<T, 'id'>]: MappingValue<T[k]> }
+}

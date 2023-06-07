@@ -4,8 +4,7 @@ import { getAirtableTable } from './airtable';
 import { assertMatchesSchema } from './assertMatchesSchema';
 import { mapRecordFieldNamesAirtableToTs, mapRecordFieldNamesTsToAirtable } from './mapping/nameMapper';
 import { mapRecordTypeAirtableToTs, mapRecordTypeTsToAirtable } from './mapping/recordMapper';
-import { airtableFieldNameTsTypes } from './mapping/types';
-import { Item, Table } from './tables';
+import { airtableFieldNameTsTypes, Item, Table } from './mapping/types';
 import { AirtableRecord, AirtableTable } from './types';
 
 const mapRecordFromAirtable = <T extends Item>(

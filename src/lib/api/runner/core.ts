@@ -1,5 +1,5 @@
 import { WebClient as SlackWebClient } from '@slack/web-api';
-import { scan } from '../db';
+import { scan } from '../db/common';
 import { getSlackData } from '../slack';
 import { getSlackParticipantAirtableLink, slackAlert } from '../slackAlert';
 import { Installation, Meeting, participantsTableFor } from '../db/tables';

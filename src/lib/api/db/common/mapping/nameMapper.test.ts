@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { Table } from '../tables';
+import { Table } from '../../tables';
 import { mapRecordFieldNamesAirtableToTs, mapRecordFieldNamesTsToAirtable } from './nameMapper';
 
 type MockItem = {

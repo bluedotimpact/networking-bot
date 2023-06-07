@@ -1,8 +1,8 @@
 import Airtable from 'airtable';
 import axios from 'axios';
 import { now } from 'src/lib/timestamp';
-import env from '../env';
-import { Item, Table } from './tables';
+import env from '../../env';
+import { Item, Table } from './mapping/types';
 import { AirtableTable } from './types';
 
 const airtable = new Airtable({

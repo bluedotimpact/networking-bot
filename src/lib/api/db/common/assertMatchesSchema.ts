@@ -1,5 +1,4 @@
-import { matchesType, TsTypeString } from './mapping/types';
-import { Item, Table } from './tables';
+import { matchesType, TsTypeString, Item, Table } from './mapping/types';
 
 // In theory, this should never catch stuff because our type mapping logic should
 // verify the types are compatible. However, "In theory there is no difference
