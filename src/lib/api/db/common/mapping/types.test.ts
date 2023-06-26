@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { Table } from '../../tables';
-import { airtableFieldNameTsTypes, matchesType } from './types';
+import { airtableFieldNameTsTypes, matchesType, Table } from './types';
 
 describe('matchesType', () => {
   test.each([

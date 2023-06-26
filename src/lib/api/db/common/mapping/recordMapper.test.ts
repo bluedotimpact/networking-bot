@@ -1,6 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import { AirtableRecord, AirtableTable } from '../types';
-import { mapRecordTypeAirtableToTs, mapRecordTypeTsToAirtable } from './recordMapper';
+import { visibleForTesting } from './recordMapper';
+
+const {
+  mapRecordTypeAirtableToTs,
+  mapRecordTypeTsToAirtable,
+} = visibleForTesting;
 
 const mockAirtableTable = {
   name: 'example',

@@ -1,7 +1,10 @@
 import { FieldSet } from 'airtable';
 import { AirtableRecord, AirtableTable } from '../types';
 import { fieldMappers } from './fieldMappers';
-import { FromTsTypeString, matchesType, TsTypeString } from './types';
+import { mapRecordFieldNamesAirtableToTs, mapRecordFieldNamesTsToAirtable } from './nameMapper';
+import {
+  airtableFieldNameTsTypes, FromTsTypeString, Item, matchesType, Table, TsTypeString,
+} from './types';
 
 /**
  * This function coerces an Airtable record to a TypeScript object, given an
@@ -18,7 +21,7 @@ import { FromTsTypeString, matchesType, TsTypeString } from './types';
  * @returns An object matching the TypeScript type passed in, based on the Airtable record. Throws if cannot coerce to requested type.
  * @example { id: 'rec012', a: 'Some text', b: 123, c: false, d: 'rec345' }
  */
-export const mapRecordTypeAirtableToTs = <
+const mapRecordTypeAirtableToTs = <
   T extends { [fieldName: string]: TsTypeString },
 >(
     tsTypes: T,
@@ -69,7 +72,7 @@ export const mapRecordTypeAirtableToTs = <
  * @returns An Airtable FieldSet. Throws if cannot coerce to requested type.
  * @example { a: 'Some text', b: 123, d: ['rec123'] } // (c is an un-ticked checkbox, d is a multipleRecordLinks)
  */
-export const mapRecordTypeTsToAirtable = <
+const mapRecordTypeTsToAirtable = <
   T extends { [fieldName: string]: TsTypeString },
   R extends { [K in keyof T]?: FromTsTypeString<T[K]> } & { id?: string },
 >(
@@ -111,4 +114,30 @@ export const mapRecordTypeTsToAirtable = <
   });
 
   return Object.assign(item, { id: tsRecord.id });
+};
+
+export const mapRecordFromAirtable = <T extends Item>(
+  table: Table<T>,
+  record: AirtableRecord,
+) => {
+  const tsTypes = airtableFieldNameTsTypes(table);
+  const tsRecord = mapRecordTypeAirtableToTs(tsTypes, record);
+  const mappedRecord = mapRecordFieldNamesAirtableToTs(table, tsRecord);
+  return mappedRecord;
+};
+
+export const mapRecordToAirtable = <T extends Item>(
+  table: Table<T>,
+  item: Partial<T>,
+  airtableTable: AirtableTable,
+): FieldSet => {
+  const mappedItem = mapRecordFieldNamesTsToAirtable(table, item);
+  const tsTypes = airtableFieldNameTsTypes(table);
+  const fieldSet = mapRecordTypeTsToAirtable(tsTypes, mappedItem, airtableTable);
+  return fieldSet;
+};
+
+export const visibleForTesting = {
+  mapRecordTypeAirtableToTs,
+  mapRecordTypeTsToAirtable,
 };
