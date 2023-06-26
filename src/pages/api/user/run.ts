@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import createHttpError from 'http-errors';
-import { handleInstallation } from 'src/lib/api/runner/core';
-import { get, scan } from '../../../lib/api/db';
+import { handleInstallation } from '../../../lib/api/runner/core';
+import db from '../../../lib/api/db';
 import {
   installationsTable, meetingsTable,
 } from '../../../lib/api/db/tables';
@@ -23,8 +23,8 @@ export default apiRoute(async (
     throw new createHttpError.BadRequest('Missing installation id');
   }
 
-  const installation = await get(installationsTable, req.body.installationId);
-  const meetings = (await scan(meetingsTable)).filter((m) => m.installationId === installation.id);
+  const installation = await db.get(installationsTable, req.body.installationId);
+  const meetings = (await db.scan(meetingsTable)).filter((m) => m.installationId === installation.id);
 
   await handleInstallation(installation, meetings);
 

@@ -1,9 +1,9 @@
 import { BlockAction, ButtonAction } from '@slack/bolt';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getParticipantAirtableLink } from 'src/lib/airtableLink';
-import { getGlobalSettings } from 'src/lib/api/globalSettings';
+import { getParticipantAirtableLink } from '../../../lib/airtableLink';
+import { getGlobalSettings } from '../../../lib/api/globalSettings';
 import { apiRoute } from '../../../lib/api/apiRoute';
-import { get, insert, update } from '../../../lib/api/db';
+import db from '../../../lib/api/db';
 import {
   acknowledgeSlackButton, ACTION_IDS, getSlackData, makeMessage,
 } from '../../../lib/api/slack';
@@ -33,7 +33,7 @@ export default apiRoute(async (
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.CONFIRM_MEETING_BUTTON,
   async (args) => {
-    const meeting = await update(meetingsTable, {
+    const meeting = await db.update(meetingsTable, {
       id: args.action.value,
       lastModifiedAt: now(),
       state: 'CONFIRMED',
@@ -55,7 +55,7 @@ app.action<BlockAction<ButtonAction>>(
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.COMPLETE_MEETING_BUTTON,
   async (args) => {
-    const meeting = await update(meetingsTable, {
+    const meeting = await db.update(meetingsTable, {
       id: args.action.value,
       lastModifiedAt: now(),
       state: 'COMPLETED',
@@ -64,7 +64,7 @@ app.action<BlockAction<ButtonAction>>(
     const groupMessage = (await getGlobalSettings()).completeMeetingGroupMessage;
     await args.say({ text: groupMessage, blocks: makeMessage(groupMessage) });
 
-    const installation = await get(installationsTable, meeting.installationId);
+    const installation = await db.get(installationsTable, meeting.installationId);
     const participantsTable = participantsTableFor(installation);
     const { members } = await args.client.users.list();
     if (members === undefined) {
@@ -73,7 +73,7 @@ app.action<BlockAction<ButtonAction>>(
 
     const participantIds: string[] = JSON.parse(meeting.participantIdsJson);
     const participants = await Promise.all(participantIds.map(async (participantId) => {
-      const participant = await get(participantsTable, participantId);
+      const participant = await db.get(participantsTable, participantId);
       return {
         ...participant,
         ...getSlackData(participant, members),
@@ -108,7 +108,7 @@ app.action<BlockAction<ButtonAction>>(
 app.action<BlockAction<ButtonAction>>(
   ACTION_IDS.DECLINE_MEETING_BUTTON,
   async (args) => {
-    const meeting = await update(meetingsTable, {
+    const meeting = await db.update(meetingsTable, {
       id: args.action.value,
       lastModifiedAt: now(),
       state: 'DECLINED',
@@ -131,10 +131,10 @@ app.action<BlockAction<ButtonAction>>(
   async (args) => {
     const [meetingId, participantId, rating]: [string, string, number] = JSON.parse(args.action.value);
 
-    const meeting = await get(meetingsTable, meetingId);
-    const installation = await get(installationsTable, meeting.installationId);
+    const meeting = await db.get(meetingsTable, meetingId);
+    const installation = await db.get(installationsTable, meeting.installationId);
 
-    await insert(meetingFeedbacksTable, {
+    await db.insert(meetingFeedbacksTable, {
       meetingId,
       participantId,
       createdAt: now(),

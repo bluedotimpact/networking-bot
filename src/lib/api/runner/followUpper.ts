@@ -1,6 +1,6 @@
 import { WebClient } from '@slack/web-api';
-import { getSlackAirtableLink, slackAlert } from 'src/lib/api/slackAlert';
-import { update } from '../db';
+import { getSlackAirtableLink, slackAlert } from '../slackAlert';
+import db from '../db';
 import { makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
@@ -58,6 +58,6 @@ export const followUpper = async (
       blocks: makeMessage(text),
     });
 
-    await update(meetingsTable, { id: meeting.id, lastModifiedAt: now() });
+    await db.update(meetingsTable, { id: meeting.id, lastModifiedAt: now() });
   }));
 };

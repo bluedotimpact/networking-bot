@@ -24,8 +24,10 @@ test('getParticipantAirtableLink', () => {
     name: 'Installation name',
     participantsDimensionFieldNamesJson: '[]',
     participantsSlackEmailFieldName: 'slackEmail',
+    participantsBiographyFieldName: 'Biography',
     slackInstallationJson: '{}',
     slackTeamId: 'team_123',
+    introMessage: '',
   };
   const recordId = 'rec012';
 

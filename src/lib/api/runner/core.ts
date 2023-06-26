@@ -1,5 +1,5 @@
 import { WebClient as SlackWebClient } from '@slack/web-api';
-import { scan } from '../db';
+import db from '../db';
 import { getSlackData } from '../slack';
 import { getSlackParticipantAirtableLink, slackAlert } from '../slackAlert';
 import { Installation, Meeting, participantsTableFor } from '../db/tables';
@@ -18,7 +18,7 @@ export const handleInstallation = async (installation: Installation, meetings: M
   if (members === undefined) {
     throw new Error(`Failed to get Slack members for installation ${installation.id}`);
   }
-  const participants = (await scan(
+  const participants = (await db.scan(
     participantsTableFor(installation),
     installation.participantsViewId ? { view: installation.participantsViewId } : undefined,
   ))

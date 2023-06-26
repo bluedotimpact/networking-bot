@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { timingSafeEqual } from 'node:crypto';
 import createHttpError from 'http-errors';
-import { handleInstallation } from 'src/lib/api/runner/core';
-import { scan } from '../../../lib/api/db';
+import { handleInstallation } from '../../../lib/api/runner/core';
+import db from '../../../lib/api/db';
 import {
   installationsTable, meetingsTable,
 } from '../../../lib/api/db/tables';
@@ -30,8 +30,8 @@ export default apiRoute(async (
     }
   }
 
-  const installations = await scan(installationsTable);
-  const meetings = await scan(meetingsTable);
+  const installations = await db.scan(installationsTable);
+  const meetings = await db.scan(meetingsTable);
 
   await Promise.all(installations.map(async (installation) => {
     try {

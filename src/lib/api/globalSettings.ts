@@ -1,4 +1,4 @@
-import { scan } from './db';
+import db from './db';
 import { globalSettingsTable } from './db/tables';
 
 const globalSettingKeys = [
@@ -17,7 +17,7 @@ let cache: GlobalSettings | null = null;
 export const getGlobalSettings = async () => {
   if (cache) return cache;
 
-  const records = await scan(globalSettingsTable);
+  const records = await db.scan(globalSettingsTable);
   const settings = Object.fromEntries(records.map((r) => [r.name, r.value]));
   globalSettingKeys.forEach((key) => {
     if (typeof settings[key] !== 'string') {

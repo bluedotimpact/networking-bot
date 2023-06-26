@@ -1,8 +1,8 @@
 import { UserManager } from 'oidc-client';
 import { useEffect, useState } from 'react';
-import { googleUserManagerSettings } from 'src/components/LoginPage';
-import { Page } from 'src/components/Page';
-import { H1 } from 'src/components/Text';
+import { googleUserManagerSettings } from '../components/LoginPage';
+import { Page } from '../components/Page';
+import { H1 } from '../components/Text';
 
 const OauthCallback: React.FC = () => {
   const [error, setError] = useState<string | undefined>();

@@ -1,7 +1,7 @@
 import { WebClient } from '@slack/web-api';
-import { slackAlert } from 'src/lib/api/slackAlert';
-import { getParticipantAirtableLink } from 'src/lib/airtableLink';
-import { insert } from '../db';
+import { slackAlert } from '../slackAlert';
+import { getParticipantAirtableLink } from '../../airtableLink';
+import db from '../db';
 import { ACTION_IDS, makeMessage } from '../slack';
 import {
   Installation, Meeting, meetingsTable, Participant,
@@ -30,7 +30,7 @@ export const matcher = async (
       return;
     }
 
-    const meeting = await insert(meetingsTable, {
+    const meeting = await db.insert(meetingsTable, {
       installationId: installation.id,
       createdAt: now(),
       lastModifiedAt: now(),

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { scan } from 'src/lib/api/db/index';
-import { Installation, installationsTable } from 'src/lib/api/db/tables';
+import db from '../../../lib/api/db';
+import { Installation, installationsTable } from '../../../lib/api/db/tables';
 import { apiRoute } from '../../../lib/api/apiRoute';
 
 export type LoginResponse = {
@@ -16,7 +16,7 @@ export default apiRoute(async (
     tableId: string,
   }>,
 ) => {
-  const installations = await scan(installationsTable);
+  const installations = await db.scan(installationsTable);
 
   res.status(200).json({
     installations,

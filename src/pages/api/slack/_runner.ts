@@ -1,7 +1,7 @@
 import { App } from '@slack/bolt';
 import { AppRunner } from '@seratch_/bolt-http-runner';
 import env from '../../../lib/api/env';
-import { insert, remove, scan } from '../../../lib/api/db';
+import db from '../../../lib/api/db';
 import { installationsTable } from '../../../lib/api/db/tables';
 
 export const appRunner = new AppRunner({
@@ -19,7 +19,7 @@ export const appRunner = new AppRunner({
 
       // Insert the defaults for new installations
       // To edit these for a particular installation, do this in Airtable
-      await insert(installationsTable, {
+      await db.insert(installationsTable, {
         name: installation.team?.name ?? installation.enterprise?.name ?? '',
         slackTeamId: teamId,
         slackInstallationJson: JSON.stringify(installation),
@@ -40,7 +40,7 @@ export const appRunner = new AppRunner({
         ? installQuery.enterpriseId!
         : installQuery.teamId!;
 
-      const installations = (await scan(installationsTable)).filter((i) => i.slackTeamId === teamId);
+      const installations = (await db.scan(installationsTable)).filter((i) => i.slackTeamId === teamId);
       if (installations.length === 0) {
         throw new Error(`Installation not found for team ${teamId}`);
       }
@@ -55,7 +55,7 @@ export const appRunner = new AppRunner({
       const teamId = installQuery.isEnterpriseInstall
         ? installQuery.enterpriseId!
         : installQuery.teamId!;
-      await remove(installationsTable, teamId);
+      await db.remove(installationsTable, teamId);
     },
   },
 });
