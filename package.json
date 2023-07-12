@@ -10,7 +10,7 @@
     "test:watch": "vitest",
     "deploy:prod": "VERCEL_PROJECT_ID=prj_OMSHY9c0ikY9jOyAvTD3FlP5FF9z VERCEL_ORG_ID=QbqUU7VQwMWpjbDCLDlR6ArA npm run _deploy:vercel",
     "_deploy:vercel": "vercel build --yes --prod --token=$VERCEL_TOKEN && vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN",
-    "postinstall": "cp -n .env.template .env.local"
+    "postinstall": "shx cp -n .env.template .env.local"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.16",
@@ -35,6 +35,7 @@
     "oidc-client": "^1.11.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "shx": "^0.3.4",
     "typescript": "4.9.4",
     "vercel": "^28.15.6",
     "vitest": "^0.29.2"
