@@ -14,7 +14,7 @@ export const assertTokenValid = async (googleIdToken: string) => {
   if (!tokenPayload) throw new createHttpError.Unauthorized('idToken: missing payload');
   if (!tokenPayload.email) throw new createHttpError.Unauthorized('idToken: missing email');
   if (!tokenPayload.email_verified) throw new createHttpError.Unauthorized('idToken: email not verified');
-  if (tokenPayload.hd !== 'bluedot.org') throw new createHttpError.Unauthorized('idToken: hd not bluedotimpact.org');
+  if (tokenPayload.hd !== 'bluedot.org') throw new createHttpError.Unauthorized('idToken: hd not bluedot.org');
 
   return tokenPayload;
 };
