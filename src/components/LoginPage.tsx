@@ -60,7 +60,7 @@ const GoogleLoginButton: React.FC<LoginButtonProps> = ({ setError, setLoading })
         try {
           const user = await new UserManager(googleUserManagerSettings).signinPopup({
             extraQueryParams: {
-              hd: 'bluedotimpact.org',
+              hd: 'bluedot.org',
             },
           });
           setLoading(true);
