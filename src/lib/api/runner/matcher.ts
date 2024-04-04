@@ -1,11 +1,10 @@
 import { WebClient } from '@slack/web-api';
 import { slackAlert } from '../slackAlert';
 import { getParticipantAirtableLink } from '../../airtableLink';
-import db from '../db';
-import { ACTION_IDS, makeMessage } from '../slack';
-import {
+import db, {
   Installation, Meeting, meetingsTable, Participant,
-} from '../db/tables';
+} from '../db';
+import { ACTION_IDS, makeMessage } from '../slack';
 import { now } from '../../timestamp';
 import { getGlobalSettings } from '../globalSettings';
 

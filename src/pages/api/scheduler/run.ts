@@ -2,10 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { timingSafeEqual } from 'node:crypto';
 import createHttpError from 'http-errors';
 import { handleInstallation } from '../../../lib/api/runner/core';
-import db from '../../../lib/api/db';
-import {
+import db, {
   installationsTable, meetingsTable,
-} from '../../../lib/api/db/tables';
+} from '../../../lib/api/db';
 import env from '../../../lib/api/env';
 import { apiRoute } from '../../../lib/api/apiRoute';
 

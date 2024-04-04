@@ -1,5 +1,9 @@
-import env from '../env';
-import { Table, Item } from './common/mapping/types';
+import { AirtableTs, Table, Item } from 'airtable-ts';
+import env from './env';
+
+export default new AirtableTs({
+  apiKey: env.AIRTABLE_PERSONAL_ACCESS_TOKEN,
+});
 
 export interface Participant extends Item {
   'slackEmail': string,
@@ -64,7 +68,7 @@ export const installationsTable: Table<Installation> = {
     participantsBiographyFieldName: 'Participants biography field name',
     participantsDimensionFieldNamesJson: 'Participants dimension field names JSON',
     introMessage: 'Intro message',
-  }
+  },
 };
 
 export interface Meeting extends Item {
@@ -98,7 +102,7 @@ export const meetingsTable: Table<Meeting> = {
     lastModifiedAt: 'Last modified at',
     state: 'State',
     participantLinks: 'Participant links',
-  }
+  },
 };
 
 export interface MeetingFeedback extends Item {
@@ -126,7 +130,7 @@ export const meetingFeedbacksTable: Table<MeetingFeedback> = {
     value: 'Value',
     createdAt: 'Created at',
     participantLinks: 'Participant links',
-  }
+  },
 };
 
 export interface GlobalSetting extends Item {
@@ -145,5 +149,5 @@ export const globalSettingsTable: Table<GlobalSetting> = {
   mappings: {
     name: 'Name',
     value: 'Value',
-  }
+  },
 };

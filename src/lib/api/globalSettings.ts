@@ -1,5 +1,4 @@
-import db from './db';
-import { globalSettingsTable } from './db/tables';
+import db, { globalSettingsTable } from './db';
 
 const globalSettingKeys = [
   'introMeetingGroupMessage',

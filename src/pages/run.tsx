@@ -6,7 +6,7 @@ import Button from '../components/Button';
 import Link from '../components/Link';
 import { Page } from '../components/Page';
 import { H1 } from '../components/Text';
-import { Installation } from '../lib/api/db/tables';
+import { Installation } from '../lib/api/db';
 import { AuthState } from '../lib/client/authState';
 import { withAuth } from '../lib/client/withAuth';
 import { RunResponse } from './api/scheduler/run';

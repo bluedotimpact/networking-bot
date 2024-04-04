@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getAirtableLink } from '../airtableLink';
 import env from './env';
-import { Installation } from './db/tables';
+import { Installation } from './db';
 
 export const slackAlert = async (message: string): Promise<void> => {
   console.log(`Sending Slack: ${message}`);

@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import { getParticipantAirtableLink, getAirtableLink } from './airtableLink';
-import { Installation } from './api/db/tables';
+import { Installation } from './api/db';
 
 test('getAirtableLink', () => {
   const baseId = 'app123';

@@ -2,7 +2,7 @@ import {
   ActionsBlock as SlackActionsBlock, BlockAction, Button, ButtonAction, Middleware, SectionBlock, SlackActionMiddlewareArgs,
 } from '@slack/bolt';
 import { UsersListResponse } from '@slack/web-api';
-import { Participant } from './db/tables';
+import { Participant } from './db';
 
 export const ACTION_IDS = {
   CONFIRM_MEETING_BUTTON: 'CONFIRM_MEETING_BUTTON',

@@ -3,13 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getParticipantAirtableLink } from '../../../lib/airtableLink';
 import { getGlobalSettings } from '../../../lib/api/globalSettings';
 import { apiRoute } from '../../../lib/api/apiRoute';
-import db from '../../../lib/api/db';
+import db, {
+  installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor,
+} from '../../../lib/api/db';
 import {
   acknowledgeSlackButton, ACTION_IDS, getSlackData, makeMessage,
 } from '../../../lib/api/slack';
-import {
-  installationsTable, meetingFeedbacksTable, meetingsTable, participantsTableFor,
-} from '../../../lib/api/db/tables';
 import { now } from '../../../lib/timestamp';
 import { app, appRunner } from './_runner';
 

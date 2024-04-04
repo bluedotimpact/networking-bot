@@ -1,8 +1,7 @@
 import { WebClient as SlackWebClient } from '@slack/web-api';
-import db from '../db';
+import db, { Installation, Meeting, participantsTableFor } from '../db';
 import { getSlackData } from '../slack';
 import { getSlackParticipantAirtableLink, slackAlert } from '../slackAlert';
-import { Installation, Meeting, participantsTableFor } from '../db/tables';
 import { followUpper } from './followUpper';
 import { matcher } from './matcher';
 

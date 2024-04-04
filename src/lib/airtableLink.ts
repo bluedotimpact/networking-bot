@@ -1,4 +1,4 @@
-import { Installation } from './api/db/tables';
+import { Installation } from './api/db';
 
 export const getParticipantAirtableLink = (installation: Installation, recordId: string) => {
   return getAirtableLink({
