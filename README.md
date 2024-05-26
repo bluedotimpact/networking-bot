@@ -1,4 +1,8 @@
-# networking-bot ![deployment automatic](https://img.shields.io/badge/deployment-automatic-success)
+_This product is archived. This means we no longer use or develop it._
+
+---
+
+# networking-bot
 
 A Slack app that pairs up participants for 1:1 conversations.
 
@@ -43,7 +47,7 @@ Todo:
 - nice to have: smarter matcher logic
 - nice to have: time availabilities
 
-https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
+(BlueDot Internal) Further documentation: https://www.notion.so/bluedot-impact/Networking-bot-89bec8d266884408839970b6d9512c62
 
 ## Developer setup
 
